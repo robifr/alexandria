@@ -22,7 +22,7 @@ if(!isset($_SESSION['user'])){
 <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 
 <!-- link css -->
-    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>"> 
 </head>
 <body>
     <?php
@@ -105,7 +105,6 @@ if(!isset($_SESSION['user'])){
         <a href=""><img src="asset/icon/book.svg" alt="book"><span>Book</span></a>
         <a href=""><img src="asset/icon/star.svg" alt="star"><span>Favorite</span></a>
         <a href=""><img src="asset/icon/history.svg" alt="history"><span>History</span></a>
-        <a href="logout.php"><img src="asset/icon/logout.svg" alt="logout"><span>Log out</span></a>
      </div>
 
 
@@ -116,7 +115,7 @@ if(!isset($_SESSION['user'])){
         <a href="">Education</a>
     </div>
 
-    <div class="container">
+    <div class="container" id="books">
         <div class="card">
             <img src="asset/img/bumi.jpg" alt="image">
             <span>Bumi <br> Tere liye</span>
@@ -165,6 +164,85 @@ if(!isset($_SESSION['user'])){
             <img src="asset/img/Night books.jpg" alt="image">
             <span>NightBooks <br> J.A White</span>
         </div>
+    </div>
+
+    <div class="container-favorite" id="faforite">
+        <div class="card">
+            <img src="asset/img/bumi.jpg" alt="image">
+            <span>Bumi <br> Tere liye</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Comet.jpg" alt="image">
+            <span>Comet <br> Tere liye</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Matahari.jpg" alt="image">
+            <span>Matahari <br> Tere liye</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Siputih.jpg" alt="image">
+            <span>Si putih <br> Tere liye</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Constatinopel.jpg" alt="image">
+            <span>Constatinopel <br> Roger crowley</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/hatta.jpg" alt="image">
+            <span>Hatta<br> wartawan tempo</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Teh dan penghianatan.jpg" alt="image">
+            <span>Teh dan Penghianatan<br> Iksaka banu</span>
+        </div>
+        <div class="card">
+            <img src="asset/img/Harry potter.jpg" alt="image">
+            <span>Harry potter <br>j.k rowling</span>
+        </div>
+        </div>
+    </div>
+
+    <div class="container-history" id="history">
+        <div class="card">
+            <img src="asset/img/bumi.jpg" alt="image">
+            <div class="book-name">
+                <p>Bumi</p>
+                <p>Tere liye</p>
+                <span>Chapter 5</span>
+                <p>Novel Science-fiction Adventure</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="asset/img/comet.jpg" alt="image">
+            <div class="book-name">
+                <p>Comet</p>
+                <p>Tere liye</p>
+                <span>Chapter 1</span>
+                <p>Novel Science-fiction Adventure</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="asset/img/Harry potter.jpg" alt="image">
+            <div class="book-name">
+                <p>Hary Potter and The CHamber of Secret</p>
+                <p>J.k Rowling</p>
+                <span>Chapter 3</span>
+                <p>Novel Magic Adventure</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="asset/img/hatta.jpg" alt="image">
+            <div class="book-name">
+                <p>Hatta - jejak yang melampaui zaman</p>
+                <p>Wartawan Tempo</p>
+                <span>Chapter 1</span>
+                <p>Biographie</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- javascript -->
