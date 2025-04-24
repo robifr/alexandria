@@ -8,7 +8,7 @@
 <body style="margin:0; padding:0; font-family:Georgia, serif; background:#f3f3f3;">
   <div style="display:flex; justify-content:center; align-items:center; height:100vh;">
     <div style="display:flex; background:white; width:900px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
-      <!-- Left -->
+      <!-- Left. -->
       <div style="flex:1; padding:40px; display:flex; flex-direction:column; justify-content:center;">
         <img src="../assets/img/books_shaped_lamp.png" alt="Books Lightbulb" style="width:250px; max-width:100%; margin-bottom:20px;">
         <h1 style="font-size:2rem; font-weight:bold; margin-bottom:10px; text-align:left;">Welcome to Alexandria</h1>
@@ -17,7 +17,7 @@
         </p>
       </div>
 
-      <!-- Right -->
+      <!-- Right. -->
       <div style="flex:1; padding:60px 40px;">
         <form action="login.php" method="POST" style="width:100%; max-width:300px; height:100%; display:flex; flex-direction:column; gap:15px;">
           <h2 style="font-size:1.5rem; margin-bottom:10px; text-align:left;">Login</h2>
@@ -32,6 +32,10 @@
               style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:0;">
               <img src="../assets/icon/visibility.svg" alt="Show" style="width:20px; height:20px;">
             </button>
+          </div>
+
+          <div id="errorMessage" style="display:none; color:red; font-size:0.9rem; margin-top:-5px; margin-bottom:10px;">
+            Wrong username or password
           </div>
 
           <button type="submit" 
@@ -56,6 +60,13 @@
       img.src = isPassword ? "../assets/icon/visibility_off.svg" : "../assets/icon/visibility.svg";
       img.alt = isPassword ? "Hide" : "Show";
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('error') === '1') {
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    });
   </script>
 </body>
 </html>

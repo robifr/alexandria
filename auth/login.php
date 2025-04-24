@@ -1,4 +1,4 @@
-<?php
+<?php 
 include '../db.php';
 
 $username = $_POST['username'];
@@ -14,14 +14,16 @@ if ($stmt->num_rows > 0) {
   $stmt->bind_result($hashed);
   $stmt->fetch();
 
+  // If success, go to dashboard.
   if (password_verify($password, $hashed)) {
     echo "<script>window.location.href='../dashboard/books.html';</script>";
   } else {
-    echo "<script>alert('Wrong password'); window.location.href='login.html';</script>";
+    echo "<script>window.location.href='login.html?error=1';</script>";
   }
 } else {
-  echo "<script>alert('Username not found'); window.location.href='login.html';</script>";
+  echo "<script>window.location.href='login.html?error=1';</script>";
 }
+
 $stmt->close();
 $conn->close();
 ?>
