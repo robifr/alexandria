@@ -1,2 +1,6 @@
 *.jpg
 *.png
+
+# Except images used for the website UI, such as illustrations.
+!/assets/img/*.jpg
+!/assets/img/*.png
