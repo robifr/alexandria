@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reader - Alexandria</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    * {box-sizing:border-box;margin:0;padding:0;}
+    html, body {height:100%;overflow:hidden;font-family:'Roboto Slab', serif;background:#f1efe3;}
+    body {display:flex;}
+    #toc li {padding:10px 14px;cursor:pointer;background:#f1efe3;margin:0 8px;border-radius:8px;}
+    #toc li:hover {background:#e0ddd0;}
+    #toc li.active {background:#000000;font-weight:bold;}
+    foliate-view {width:100%;height:100%;}
+
+    ::-webkit-scrollbar { width:8px; background-color:rgba(0,0,0,0); }
+    ::-webkit-scrollbar:hover { background-color:rgba(0,0,0,0.09); }
+    ::-webkit-scrollbar-thumb:vertical { background:rgba(0,0,0,0.5); }
+    ::-webkit-scrollbar-thumb:vertical:active { background:rgba(0,0,0,0.61); }
+  </style>
+</head>
+<body>
+
+  <nav id="toc" style="width:200px;padding: 8px 0px 8px 0px;background:#f1efe3;border-right:1px solid #ddd;font-size:0.85rem;overflow-y:auto;">
+    <ul style="list-style:none;"></ul>
+  </nav>
+
+  <div id="main" style="flex:1;display:flex;flex-direction:column;">
+    <div id="header" style="height:40px;background:#f1efe3;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:0.9rem;color:#333;">
+      <div id="chaperList"></div>
+      <div id="pageNumber"></div>
+    </div>
+    <div id="viewer" style="flex:1;overflow:hidden;position:relative;"></div>
+  </div>
+  <script type="module">
+    import '../library/foliate-js/view.js';
+
+    const epubPath = '../assets/epub/constantinople_the_last_great_siege_1453.epub';
+    const toc = document.querySelector('#toc ul');
+    const chaperList = document.getElementById('chaperList');
+    const pageNumber = document.getElementById('pageNumber');
+    const viewer = document.getElementById('viewer');
+    (async () => {
+      const view = document.createElement('foliate-view');
+      viewer.append(view);
+      await view.open(epubPath);
+
+      // Create table of contents.
+      function buildToc(items, parent) {
+        items.forEach((item) => {
+          const li = document.createElement('li');
+          li.textContent = item.label;
+          li.onclick = () => view.goTo(item.href);
+          parent.append(li);
+          if (item.children) {
+            const ul = document.createElement('ul');
+            li.append(ul);
+            buildToc(item.children, ul);
+          }
+        });
+      }
+      buildToc(view.book.toc, toc);
+      const tocItems = Array.from(toc.getElementsByTagName('li'));
+
+      // Handle navigation.
+      view.addEventListener('relocate', (e) => {
+        const loc = e.detail;
+        const currentHref = loc.tocItem?.href?.split('#')[0];
+        // Update TOC highlighting.
+        tocItems.forEach(li => {
+          const tocHref = li.dataset.href?.split('#')[0];
+          if (tocHref === currentHref) li.classList.add('active');
+          else li.classList.remove('active');
+        });
+
+        // Update chapter title.
+        const activeItem = tocItems.find(li => li.classList.contains('active'));
+        chaperList.textContent = activeItem?.textContent || '';
+        // Update page numbers.
+        const current = loc.location?.current || 0;
+        const total = loc.location?.total || 0;
+        pageNumber.textContent = `${current} of ${total}`;
+      });
+
+      // Wheel navigation.
+      view.addEventListener('wheel', (ev) => {
+        if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
+          ev.preventDefault();
+          ev.deltaY > 0 ? view.next() : view.prev();
+        }
+      }, { passive: false });
+
+      // Wait for the first 'relocate' event, which fires when view is ready.
+      view.addEventListener('relocate', function handleFirstRelocate(e) {
+        view.removeEventListener('relocate', handleFirstRelocate);
+        // Trigger UI updates.
+        const detail = e.detail;
+        const event = new CustomEvent('relocate', { detail });
+        view.dispatchEvent(event);
+      });
+    })();
+</script>
+</body>
+</html>

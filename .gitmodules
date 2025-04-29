@@ -1,0 +1,3 @@
+[submodule "library/foliate-js"]
+	path = library/foliate-js
+	url = https://github.com/johnfactotum/foliate-js
