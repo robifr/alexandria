@@ -1,107 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard - Alexandria</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Books - Alexandria</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
-    .menu-item:hover {
-      background:#eee;
-    }
-    .menu-item.selected {
-      background:#333;
-      color:white;
-    }
-    .menu-item.selected span,
-    .menu-item.selected img {
-      filter: brightness(200%);
-    }
-    .menu-text {
-      transition: display 0.2s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f1efe3;display:flex;flex-direction:column;height:100vh;}
+    .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
+    .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
+    .filter-btn {display:flex;align-items:center;gap:8px;cursor:pointer;color:#333;border:none;border-bottom:2px solid transparent;background:transparent;font-family:'Roboto Slab',serif;font-size:1rem;position:relative;padding:6px 0;}
+    .filter-btn.active {border-bottom:2px solid #333;}
+    .filter-menu {display:none;position:absolute;top:100%;left:0;background:#f1efe3;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:6px;margin-top:6px;overflow:hidden;z-index:10;}
+    .filter-menu div {padding:8px 12px;cursor:pointer;white-space:nowrap;}
+    .filter-menu div:hover {background:#e0ddd0;}
+    .card {display:inline-flex;align-items:flex-start;width:360px;margin-right:20px;background:#f1efe3;border-radius:12px;padding:10px;box-sizing:border-box;vertical-align:top;}
+    .card img {width:120px;height:180px;object-fit:cover;border-radius:12px;background:#f1efe3;flex-shrink:0;}
+    .card-body {display:flex;flex-direction:column;gap:12px;padding-left:12px;height:180px;box-sizing:border-box;}
+    .card-body strong {font-size:1rem;color:#222;margin:0 0 4px 0;line-height:1.2;white-space:normal;}
+    .card-body span {font-size:0.85rem;color:#555;margin:0;}
+    .read-btn {display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;padding:8px 28px;border:none;border-radius:16px;background:#444444;font-family:'Roboto Slab',serif;font-size:0.85rem;color:#fff;cursor:pointer;white-space:nowrap;}
+
+    ::-webkit-scrollbar {width:8px;background-color:rgba(0,0,0,0);}
+    ::-webkit-scrollbar:hover {background-color:rgba(0, 0, 0, 0.09);}
+    ::-webkit-scrollbar-thumb:vertical {background:rgba(0,0,0,0.5);}
+    ::-webkit-scrollbar-thumb:vertical:active {background:rgba(0,0,0,0.61);}
   </style>
 </head>
-<body style="margin:0; padding:0; font-family:Georgia, serif; background:#f9f9f9; display:flex; flex-direction:column; height:100vh;">
+<body>
 
-  <!-- Top toolbar. -->
-  <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 18px; background:white; box-shadow:0 2px 4px rgba(0,0,0,0.05); gap:20px;">
-    <div style="display:flex; align-items:center; gap:20px;">
-      <img src="../assets/icon/menu.svg" style="width:24px; height:24px; cursor:pointer;" onclick="toggleSidebar()" />
-      <h2 style="font-weight:bold; margin:0;">Alexandria</h2>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;">
+    <h1 style="margin:0;font-size:1.8rem;color:#333;">Alexandria</h1>
+    <div style="flex:1;display:flex;justify-content:center;gap:24px;">
+      <div class="nav-item selected">Books</div>
+      <div class="nav-item">Favorite</div>
+      <div class="nav-item">History</div>
     </div>
-
-    <div style="flex:1; max-width:500px;">
-      <div style="display:flex; align-items:center; background:#f0f0f0; border-radius:30px; padding:12px 24px;">
-        <img src="../assets/icon/search.svg" style="width:20px; height:20px; margin-right:10px;" />
-        <input type="text" placeholder="Search books" style="border:none; background:transparent; outline:none; flex:1; font-size:1rem;" />
+    <div style="display:flex;align-items:center;gap:32px;">
+      <div style="position:relative;">
+        <img src="../assets/icon/search.svg" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
+        <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;">
       </div>
+      <img src="../assets/icon/account.svg" alt="Account" style="width:40px;height:40px;cursor:pointer;">
     </div>
-
-    <img src="../assets/icon/account.svg" style="width:30px; height:30px; cursor:pointer;" />
   </div>
 
-  <div style="flex:1; display:flex; overflow:hidden;">
-    
-    <!-- Sidebar. -->
-    <div id="sidebar" style="width:220px; background:#fff; box-shadow:1px 0 4px rgba(0,0,0,0.05); transition: width 0.2s; display:flex; flex-direction:column; padding:10px 10px 10px 0;">
-      <div class="menu-item selected" style="display:flex; align-items:center; gap:14px; padding:14px 20px; border-radius:0 30px 30px 0; cursor:pointer;">
-        <img src="../assets/icon/book.svg" style="width:20px; height:20px;" />
-        <span class="menu-text">Books</span>
-      </div>
-      <div class="menu-item" style="display:flex; align-items:center; gap:14px; padding:14px 20px; border-radius:0 30px 30px 0; cursor:pointer;">
-        <img src="../assets/icon/star.svg" style="width:20px; height:20px;" />
-        <span class="menu-text">Favorite</span>
-      </div>
-      <div class="menu-item" style="display:flex; align-items:center; gap:14px; padding:14px 20px; border-radius:0 30px 30px 0; cursor:pointer;">
-        <img src="../assets/icon/history.svg" style="width:20px; height:20px;" />
-        <span class="menu-text">Read history</span>
-      </div>
-    </div>
-
-    <div style="flex:1; overflow:auto;">
-      <div style="padding:30px; display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:20px;">
-        <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05); overflow:hidden;">
-          <img src="../assets/img/constantinople.jpg" style="width:100%; height:220px; object-fit:cover;" />
-          <div style="padding:10px;">
-            <strong style="font-size:0.95rem;">Constantinople</strong><br/>
-            <span style="font-size:0.8rem; color:#555;">Roger Crowley</span>
-          </div>
-        </div>
-        <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05); overflow:hidden;">
-          <img src="../assets/img/worldwars.jpg" style="width:100%; height:220px; object-fit:cover;" />
-          <div style="padding:10px;">
-            <strong style="font-size:0.95rem;">The World Wars</strong><br/>
-            <span style="font-size:0.8rem; color:#555;">Paul Dowswell</span>
-          </div>
-        </div>
+  <div style="display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid #ddd;position:relative;">
+    <div style="position:relative;">
+      <button class="filter-btn" onclick="toggleMenu('category')">
+        Category
+        <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" style="width:20px;height:20px;">
+      </button>
+      <div id="menu-category" class="filter-menu">
+        <div>History</div>
+        <div>Science</div>
+        <div>Biography</div>
       </div>
     </div>
   </div>
+
+  <div id="book-list" style="flex:1;display:flex;flex-wrap:wrap;gap:20px;padding:20px;overflow:auto;"></div>
 
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const texts = sidebar.querySelectorAll(".menu-text");
-
-      if (sidebar.style.width === "60px") {
-        sidebar.style.width = "220px";
-        texts.forEach(t => t.style.display = "inline");
-      } else {
-        sidebar.style.width = "60px";
-        texts.forEach(t => t.style.display = "none");
-      }
-    }
-
-    const items = document.querySelectorAll(".menu-item");
-    items.forEach(item => {
-      item.onclick = () => {
-        items.forEach(i => i.classList.remove("selected"));
-        item.classList.add("selected");
-      };
+    // Navigation.
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('selected'));
+        el.classList.add('selected');
+      });
     });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const menu = btn.nextElementSibling;
+        const icon = btn.querySelector('img');
+        const isOpen = menu.style.display === 'block';
+        // Close all menus first.
+        document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter-btn img').forEach(i => i.src = '../assets/icon/arrow_drop_down.svg');
+        if (!isOpen) {
+          menu.style.display = 'block';
+          btn.classList.add('active');
+          icon.src = '../assets/icon/arrow_drop_up.svg';
+        }
+      });
+    });
+    // Close dropdowns when clicking outside.
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.filter-btn') && !e.target.closest('.filter-menu')) {
+        document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter-btn img').forEach(i => i.src = '../assets/icon/arrow_drop_down.svg');
+      }
+    });
+
+    // Fetch books from server.
+    fetch('books.php')
+      .then(res => res.json())
+      .then(books => {
+        const container = document.getElementById('book-list');
+        books.forEach(book => {
+          container.innerHTML += `
+            <div class="card">
+              <img src="${book.cover_url}" alt="">
+              <div class="card-body">
+                <div>
+                  <strong>${book.title}</strong>
+                  <br>
+                  <span>${book.writer}</span>
+                </div>
+                <button class="read-btn" onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}'">Read</button>
+              </div>
+            </div>`;
+        });
+      });
   </script>
 </body>
 </html>
