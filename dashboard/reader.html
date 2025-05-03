@@ -30,7 +30,9 @@
       <div id="chaperList"></div>
       <div id="pageNumber"></div>
     </div>
-    <div id="viewer" style="flex:1;overflow:hidden;position:relative;"></div>
+    <div id="viewer" style="flex:1;overflow:hidden;position:relative;">
+      <div id="wheel-interceptor" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;background:transparent;pointer-events:auto;"></div>
+    </div>
   </div>
   <script type="module">
     import '../library/foliate-js/view.js';
@@ -87,10 +89,13 @@
         pageNumber.textContent = `${current} of ${total}`;
       });
 
-      // Wheel navigation.
-      view.addEventListener('wheel', (ev) => {
+      // Scroll navigation.
+      const interceptor = document.getElementById('wheel-interceptor');
+      interceptor.addEventListener('wheel', ev => {
+        // Only vertical scrolls.
         if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
           ev.preventDefault();
+          ev.stopImmediatePropagation();
           ev.deltaY > 0 ? view.next() : view.prev();
         }
       }, { passive: false });
