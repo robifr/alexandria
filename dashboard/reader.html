@@ -51,7 +51,16 @@
     // Handle back button.
     document.getElementById('backButton').addEventListener('click', () => history.back());
 
-    const epubPath = '../assets/epub/constantinople_the_last_great_siege_1453.epub';
+    // Get the book metadata from server.
+    const params = new URLSearchParams(location.search);
+    const bookId = params.get('id');
+    if (!bookId) throw new Error('Book ID is required.');
+    const response = await fetch(`books.php?id=${encodeURIComponent(bookId)}`);
+    if (!response.ok) throw new Error('Book metadata fetch failed.');
+
+    const book = await response.json();
+    const epubPath = `../${book.file_path}`;
+
     const toc = document.querySelector('#toc ul');
     const chaperList = document.getElementById('chaperList');
     const pageNumber = document.getElementById('pageNumber');
