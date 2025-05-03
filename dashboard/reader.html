@@ -11,8 +11,7 @@
     body {display:flex;}
     #toc li {padding:10px 14px;cursor:pointer;background:#f1efe3;margin:0 8px;border-radius:8px;}
     #toc li:hover {background:#e0ddd0;}
-    #toc li.active {background:#000000;font-weight:bold;}
-    foliate-view {width:100%;height:100%;}
+    #toc li.active {background:#d4c7b0;font-weight:bold;}
 
     ::-webkit-scrollbar { width:8px; background-color:rgba(0,0,0,0); }
     ::-webkit-scrollbar:hover { background-color:rgba(0,0,0,0.09); }
@@ -48,14 +47,16 @@
 
       // Create table of contents.
       function buildToc(items, parent) {
-        items.forEach((item) => {
+        items.forEach(item => {
           const li = document.createElement('li');
           li.textContent = item.label;
+          li.dataset.href = item.href;
           li.onclick = () => view.goTo(item.href);
-          parent.append(li);
+
+          parent.appendChild(li);
           if (item.children) {
             const ul = document.createElement('ul');
-            li.append(ul);
+            li.appendChild(ul);
             buildToc(item.children, ul);
           }
         });
