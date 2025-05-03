@@ -27,7 +27,7 @@
         <img src="../assets/icon/arrow_back.svg" alt="Back" style="width:16px;height:16px;">
       </button>
       <div id="bookMeta">
-        <div id="bookTitle" style="font-weight:bold;font-size:0.9rem;line-height:1.2;margin-bottom:4px;"></div>
+        <div id="bookTitle" style="font-weight:bold;font-size:0.9rem;line-height:1.2;margin-bottom:4px;overflow:hidden;"></div>
         <div id="bookAuthor" style="font-size:0.8rem;color:#555;"></div>
       </div>
     </div>
@@ -71,8 +71,8 @@
       await view.open(epubPath);
 
       // Set book metadata in TOC panel.
-      document.getElementById('bookTitle').textContent = view.book.metadata.title || '';
-      document.getElementById('bookAuthor').textContent = view.book.metadata.author.name || '';
+      document.getElementById('bookTitle').textContent = book.title || '';
+      document.getElementById('bookAuthor').textContent = book.writer || '';
 
       // Show first page in the EPUB.
       if (view.book.toc.length > 0) view.goTo(view.book.toc[0].href);
@@ -127,6 +127,6 @@
         }
       }, { passive: false });
     })();
-</script>
+  </script>
 </body>
 </html>
