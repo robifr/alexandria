@@ -44,6 +44,9 @@
       const view = document.createElement('foliate-view');
       viewer.append(view);
       await view.open(epubPath);
+      
+      // Show first page in the EPUB.
+      if (view.book.toc.length > 0) view.goTo(view.book.toc[0].href);
 
       // Create table of contents.
       function buildToc(items, parent) {
@@ -91,15 +94,6 @@
           ev.deltaY > 0 ? view.next() : view.prev();
         }
       }, { passive: false });
-
-      // Wait for the first 'relocate' event, which fires when view is ready.
-      view.addEventListener('relocate', function handleFirstRelocate(e) {
-        view.removeEventListener('relocate', handleFirstRelocate);
-        // Trigger UI updates.
-        const detail = e.detail;
-        const event = new CustomEvent('relocate', { detail });
-        view.dispatchEvent(event);
-      });
     })();
 </script>
 </body>
