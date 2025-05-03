@@ -55,7 +55,7 @@
     const params = new URLSearchParams(location.search);
     const bookId = params.get('id');
     if (!bookId) throw new Error('Book ID is required.');
-    const response = await fetch(`books.php?id=${encodeURIComponent(bookId)}`);
+    const response = await fetch(`reader.php?id=${encodeURIComponent(bookId)}`);
     if (!response.ok) throw new Error('Book metadata fetch failed.');
 
     const book = await response.json();
