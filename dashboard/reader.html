@@ -135,6 +135,8 @@
         chaperList.textContent = activeItem?.textContent ?? '';
         // Update page numbers.
         pageNumber.textContent = `${currentLocation} of ${totalLocation}`;
+        // Auto scroll TOC to current highlighted one.
+        if (activeItem) activeItem.scrollIntoView({ behavior: 'auto', block: 'center' });
       });
 
       // Scroll navigation.
