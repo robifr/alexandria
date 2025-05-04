@@ -1,7 +1,15 @@
 <?php
+session_start();
+if (empty($_SESSION['user_id'])) {
+  http_response_code(401);
+  echo json_encode(['error' => 'Not authenticated']);
+  exit;
+}
+$user_id = (int)$_SESSION['user_id'];
+
 include '../db.php';
 
-// If "cover" param is set, serve the image.
+// Serve cover images.
 if (isset($_GET['cover'])) {
   $id = (int)$_GET['cover'];
   $stmt = $conn->prepare("SELECT cover_mime_type, cover FROM books WHERE id = ?");
@@ -20,13 +28,28 @@ if (isset($_GET['cover'])) {
   exit;
 }
 
-// Otherwise, return list of books.
+// Otherwise, return JSON list with per-user last location.
 header('Content-Type: application/json');
-$result = $conn->query("SELECT id, title, writer FROM books ORDER BY created_at DESC");
+$stmt = $conn->prepare("
+  SELECT 
+    books.id,
+    books.title,
+    books.writer,
+    COALESCE(reading_progress.location_current,0) AS location_current,
+    COALESCE(reading_progress.location_total,0) AS location_total
+  FROM books
+  LEFT JOIN reading_progress
+    ON reading_progress.book_id = books.id AND reading_progress.user_id = ?
+  ORDER BY books.created_at DESC
+");
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$res = $stmt->get_result();
+
 $books = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $res->fetch_assoc()) {
   $row['cover_url'] = "books.php?cover=" . $row['id'];
+  $row['epub_url'] = "reader.php?epub=" . $row['id'];
   $books[] = $row;
 }
 echo json_encode($books, JSON_UNESCAPED_UNICODE);
-?>

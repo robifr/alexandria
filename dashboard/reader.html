@@ -71,11 +71,13 @@
       await view.open(epubPath);
 
       // Set book metadata in TOC panel.
-      document.getElementById('bookTitle').textContent = book.title || '';
-      document.getElementById('bookAuthor').textContent = book.writer || '';
+      document.getElementById('bookTitle').textContent = book.title ?? '';
+      document.getElementById('bookAuthor').textContent = book.writer ?? '';
 
-      // Show first page in the EPUB.
-      if (view.book.toc.length > 0) view.goTo(view.book.toc[0].href);
+      // Show the last read page in EPUB.
+      if (book.last_cfi) view.goTo(book.last_cfi);
+      // Or the first one if no progress is made.
+      else if (view.book.toc.length > 0) view.goTo(view.book.toc[0].href);
 
       // Create table of contents.
       function buildToc(items, parent) {
@@ -98,8 +100,21 @@
 
       // Handle navigation.
       view.addEventListener('relocate', (e) => {
-        const loc = e.detail;
-        const currentHref = loc.tocItem?.href?.split('#')[0];
+        const currentLocation = e.detail.location?.current ?? 0;
+        const totalLocation = e.detail.location?.total ?? 0;
+        // Post user's progress for this book.
+        fetch('reader.php?update_progress=1', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            id: bookId,
+            last_cfi: e.detail.cfi,
+            location_current: currentLocation,
+            location_total: totalLocation
+          })
+        }).catch(console.error);
+
+        const currentHref = e.detail.tocItem?.href?.split('#')[0];
         // Update TOC highlighting.
         tocItems.forEach(li => {
           const tocHref = li.dataset.href?.split('#')[0];
@@ -109,11 +124,9 @@
 
         // Update chapter title.
         const activeItem = tocItems.find(li => li.classList.contains('active'));
-        chaperList.textContent = activeItem?.textContent || '';
+        chaperList.textContent = activeItem?.textContent ?? '';
         // Update page numbers.
-        const current = loc.location?.current || 0;
-        const total = loc.location?.total || 0;
-        pageNumber.textContent = `${current} of ${total}`;
+        pageNumber.textContent = `${currentLocation} of ${totalLocation}`;
       });
 
       // Scroll navigation.

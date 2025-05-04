@@ -20,7 +20,8 @@
     .card-body strong {font-size:1rem;color:#222;margin:0 0 4px 0;line-height:1.2;white-space:normal;}
     .card-body span {font-size:0.85rem;color:#555;margin:0;}
     .read-btn {display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;padding:8px 28px;border:none;border-radius:16px;background:#444444;font-family:'Roboto Slab',serif;font-size:0.85rem;color:#fff;cursor:pointer;white-space:nowrap;}
-
+    .progress-container {background:#ddd;border-radius:4px;height:6px;margin:6px 0;}
+    .progress-bar {height:100%;background:#444;border-radius:4px;}
     ::-webkit-scrollbar {width:8px;background-color:rgba(0,0,0,0);}
     ::-webkit-scrollbar:hover {background-color:rgba(0, 0, 0, 0.09);}
     ::-webkit-scrollbar-thumb:vertical {background:rgba(0,0,0,0.5);}
@@ -71,7 +72,7 @@
     });
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
         const menu = btn.nextElementSibling;
         const icon = btn.querySelector('img');
@@ -87,8 +88,7 @@
         }
       });
     });
-    // Close dropdowns when clicking outside.
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       if (!e.target.closest('.filter-btn') && !e.target.closest('.filter-menu')) {
         document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -102,6 +102,8 @@
       .then(books => {
         const container = document.getElementById('book-list');
         books.forEach(book => {
+          const progress = book.location_total
+            ? Math.min(1, book.location_current / book.location_total) * 100 : 0;
           container.innerHTML += `
             <div class="card">
               <img src="${book.cover_url}" alt="">
@@ -111,7 +113,12 @@
                   <br>
                   <span>${book.writer}</span>
                 </div>
-                <button class="read-btn" onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}'">Read</button>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width:${progress}%"></div>
+                </div>
+                <button class="read-btn" onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}'">
+                  Read
+                </button>
               </div>
             </div>`;
         });

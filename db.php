@@ -42,7 +42,7 @@ if ($book_check->num_rows == 0) {
 
     -- Contents.
     file_mime_type VARCHAR(100) NOT NULL, -- `application/epub+zip` for .epub file.
-    file_path VARCHAR(500) NOT NULL, -- Path in file system, currently located in `assets/epub/`.
+    file_path VARCHAR(500) NOT NULL, -- Path in file system, e.g. `./assets/epub/file_name.epub`.
 
     -- Thumbnail.
     cover_file_name VARCHAR(255) NOT NULL,
@@ -50,6 +50,20 @@ if ($book_check->num_rows == 0) {
     cover LONGBLOB NOT NULL,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )");
+}
+
+$rp_check = $conn->query("SHOW TABLES LIKE 'reading_progress'");
+if ($rp_check->num_rows == 0) {
+  $conn->query("CREATE TABLE IF NOT EXISTS reading_progress (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL,
+    last_cfi VARCHAR(255) NULL, -- EPUB CFI string.
+    location_current INT NOT NULL, -- Last read location in EPUB.
+    location_total INT NOT NULL, -- Totallocation in EPUB.
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY(user_id, book_id)
   )");
 }
 ?>
