@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Alexandria</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Roboto Slab -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f1efe3;height:100vh;overflow:hidden;}
+    .nav-item {font-family:'Roboto Slab',serif;cursor:pointer;color:#333;padding:8px 12px;border-bottom:2px solid transparent;position:relative;}
+    .nav-item:hover, .nav-item.selected {border-bottom-color:#333;}
+
+    #popup {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);justify-content:center;align-items:center;z-index:1000;}
+    #popup > div {display:flex;flex-direction:column;width:360px;max-width:360px;height:80vh;max-height:460px;padding: 0 28px 28px 28px;background:#f1efe3;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.2);position:relative;overflow-y:auto;}
+    .close {position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;margin:0;}
+    .form-container {display:flex;flex-direction:column;height:100%;gap:8px;}
+    .form-title {font-size:1.75rem;margin-bottom:20px;}
+    .input-field {width:100%;padding:16px;margin-bottom:8px;background:#e1dfd3;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;}
+    .password-field {position:relative;margin-bottom:20px;}
+    .submit-btn {width:100%;padding:16px;background:#333;color:white;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:auto;}
+    .toggle-password-btn {position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;}
+    .form-footer {text-align:center;font-size:0.8rem;}
+    .form-footer span {color:#007BFF;cursor:pointer;text-decoration:underline;}
+    .error-message {display:none;align-items:center;gap:8px;background:rgba(241,90,90,0.15);color:#a30000;padding:10px 14px;margin-bottom:8px;border-radius:8px;font-size:0.8rem;}
+
+    #snackbar.show {visibility:visible;opacity:1;bottom:50px;}
+  </style>
+</head>
+<body>
+
+  <div style="display:flex;justify-content:flex-end;padding:20px;">
+    <div id="nav-login" class="nav-item" style="margin-right:20px;">Login</div>
+    <div id="nav-signup" class="nav-item">Sign up</div>
+  </div>
+
+  <!-- Hero. -->
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 30px;height:calc(100vh - 90px);">
+    <div style="flex:1;padding-right:40px;">
+      <h1 style="font-size:3.5rem;margin-bottom:20px;color:#333;line-height:1.1;">Welcome to Alexandria</h1>
+      <p style="font-size:1.25rem;line-height:1.6;color:#555;margin-bottom:30px;">
+        Home of knowledge, where every page is a new adventure. Your gateway to an endless library of books, ready whenever you are.
+      </p>
+      <span id="learn-more" style="font-size:1rem;color:#333;cursor:pointer;text-decoration:underline;">Learn more</span>
+    </div>
+    <div style="flex:1;text-align:right;">
+      <img src="../assets/img/books_shaped_lamp.png" alt="Books Lamp" style="max-width:100%;width:500px;height:auto;">
+    </div>
+  </div>
+
+  <div id="popup">
+    <!-- Login. -->
+    <div id="login-form">
+      <button class="close">×</button>
+      <form action="login.php" method="POST" class="form-container">
+        <h2 class="form-title">Login</h2>
+        <span id="login-error" class="error-message"></span>
+        <input type="text" name="username" class="input-field" placeholder="Username" required>
+        <div class="password-field">
+          <input type="password" name="password" id="loginPassword" class="input-field" placeholder="Password" required>
+          <button type="button" onclick="togglePassword('loginPassword', this)" class="toggle-password-btn">
+            <img src="../assets/icon/visibility.svg" alt="Show" style="width:20px;height:20px;">
+          </button>
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
+        <div class="form-footer">
+          Don’t have an account? <span id="to-signup">Sign up</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Sign up. -->
+    <div id="signup-form" style="display:none;">
+      <button class="close">×</button>
+      <form action="signup.php" method="POST" class="form-container">
+        <h2 class="form-title">Sign up</h2>
+        <span id="signup-error" class="error-message"></span>
+        <input type="text" name="username" class="input-field" placeholder="Username" required>
+        <div class="password-field">
+          <input type="password" name="password" id="signupPassword" class="input-field" placeholder="Password" required>
+          <button type="button" onclick="togglePassword('signupPassword', this)" class="toggle-password-btn">
+            <img src="../assets/icon/visibility.svg" alt="Show" style="width:20px;height:20px;">
+          </button>
+        </div>
+        <button type="submit" class="submit-btn">Create account</button>
+        <div class="form-footer">
+          Already have an account? <span id="to-login">Login</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="snackbar"
+    style="visibility:hidden;min-width:220px;background:#333;color:#fff;text-align:center;border-radius:8px;padding:12px;position:fixed;
+      bottom:30px;left:50%;transform:translateX(-50%);font-size:0.8rem;z-index:1000;">
+  </div>
+
+  <script>
+    function togglePassword(id, btn) {
+      const inp = document.getElementById(id);
+      const img = btn.querySelector('img');
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      img.src = show ? '../assets/icon/visibility_off.svg' : '../assets/icon/visibility.svg';
+      img.alt = show ? 'Hide' : 'Show';
+    }
+
+    const navLogin = document.getElementById('nav-login');
+    const navSignup = document.getElementById('nav-signup');
+    const popup = document.getElementById('popup');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+
+    // Close form dialog when clicking "x" button or anywhere outside.
+    document.querySelectorAll('.close').forEach(btn => {
+      btn.addEventListener('click', () => showForm(null, false));
+    });
+    window.onclick = e => { if (e.target === popup) showForm(null, false); };
+
+    function showForm(which, isShown = true) {
+      if (isShown) {
+        if (which === 'login') {
+          loginForm.style.display = 'block';
+          signupForm.style.display = 'none';
+          navLogin.classList.add('selected');
+          navSignup.classList.remove('selected');
+        } else if (which === 'signup') {
+          loginForm.style.display = 'none';
+          signupForm.style.display = 'block';
+          navLogin.classList.remove('selected');
+          navSignup.classList.add('selected');
+        }
+        popup.style.display = 'flex';
+      // Unselect the navigation when closed.
+      } else {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'none';
+        popup.style.display = 'none';
+        navLogin.classList.remove('selected');
+        navSignup.classList.remove('selected');
+      }
+    }
+
+    // Handle login and signup navigation.
+    navLogin.onclick = () => showForm('login');
+    navSignup.onclick = () => showForm('signup');
+    document.getElementById('to-login').onclick = () => showForm('login');
+    document.getElementById('to-signup').onclick = () => showForm('signup');
+
+    function showSnackbar(message) {
+      const snackbar = document.getElementById('snackbar');
+      snackbar.innerText = message;
+      snackbar.style.visibility = 'visible';
+      setTimeout(() => { snackbar.style.visibility = 'hidden'; }, 3000); // Hide after 3 seconds.
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const returnType = new URLSearchParams(location.search);
+      if (returnType.get('error') === 'login') {
+        showForm('login');
+        document.getElementById('login-error').innerText = 'Wrong username or password';
+        document.getElementById('login-error').style.display = 'block';
+      } else if (returnType.get('error') === 'signup') {
+        showForm('signup');
+        document.getElementById('signup-error').innerText = 'Username already taken';
+        document.getElementById('signup-error').style.display = 'block';
+      } else if (returnType.get('success') === 'signup') {
+        showForm('login');
+        showSnackbar('Account created!');
+      }
+    });
+  </script>
+</body>
+</html>

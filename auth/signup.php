@@ -11,8 +11,8 @@ $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-  // Username taken.
-  echo "<script>window.location.href='signup.html?error=1';</script>";
+  // Username already taken.
+  echo "<script>window.location.href='auth.html?error=signup';</script>";
   exit();
 }
 
@@ -22,11 +22,12 @@ $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
 $stmt->bind_param("ss", $username, $hashed);
 
 if ($stmt->execute()) {
-  echo "<script>window.location.href='signup.html?success=1';</script>";
+  // Successful signup.
+  echo "<script>window.location.href='auth.html?success=signup';</script>";
 } else {
-  echo "<script>window.location.href='signup.html?error=1';</script>";
+  // Error creating account.
+  echo "<script>window.location.href='auth.html?error=signup';</script>";
 }
 
 $stmt->close();
 $conn->close();
-?>

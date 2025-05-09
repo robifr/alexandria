@@ -10,6 +10,7 @@ $stmt = $conn->prepare("SELECT id, password FROM users WHERE username=?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
+
 if ($stmt->num_rows > 0) {
   $stmt->bind_result($user_id, $hashed);
   $stmt->fetch();
@@ -19,12 +20,13 @@ if ($stmt->num_rows > 0) {
     $_SESSION['user_id'] = $user_id;
     echo "<script>window.location.href='../dashboard/books.html';</script>";
   } else {
-    echo "<script>window.location.href='login.html?error=1';</script>";
+    // Wrong password.
+    echo "<script>window.location.href='auth.html?error=login';</script>";
   }
 } else {
-  echo "<script>window.location.href='login.html?error=1';</script>";
+  // User not found.
+  echo "<script>window.location.href='auth.html?error=login';</script>";
 }
 
 $stmt->close();
 $conn->close();
-?>
