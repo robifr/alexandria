@@ -21,7 +21,6 @@ if ($db_check->num_rows == 0) {
 // Now, select the 'alexandria' database.
 $conn->select_db('alexandria');
 
-// Check if 'users' table exists.
 $table_check = $conn->query("SHOW TABLES LIKE 'users'");
 if ($table_check->num_rows == 0) {
   $conn->query("CREATE TABLE IF NOT EXISTS users (
@@ -32,7 +31,6 @@ if ($table_check->num_rows == 0) {
   )");
 }
 
-// Check if 'books' table exists.
 $book_check = $conn->query("SHOW TABLES LIKE 'books'");
 if ($book_check->num_rows == 0) {
   $conn->query("CREATE TABLE IF NOT EXISTS books (
@@ -63,7 +61,9 @@ if ($rp_check->num_rows == 0) {
     location_current INT NOT NULL, -- Last read location in EPUB.
     location_total INT NOT NULL, -- Totallocation in EPUB.
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY(user_id, book_id)
+    UNIQUE KEY(user_id, book_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
   )");
 }
 ?>
