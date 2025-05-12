@@ -66,4 +66,17 @@ if ($rp_check->num_rows == 0) {
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
   )");
 }
+
+$bookmark_check = $conn->query("SHOW TABLES LIKE 'bookmark'");
+if ($bookmark_check->num_rows == 0) {
+  $conn->query("CREATE TABLE IF NOT EXISTS bookmark (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY(user_id, book_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+  )");
+}
 ?>

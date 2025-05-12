@@ -103,6 +103,53 @@ if (isset($_GET['epub'])) {
   exit;
 }
 
+// Check whether bookmark is exists or not.
+if (isset($_GET['check_bookmark'])) {
+  $book_id = (int)$_GET['check_bookmark'];
+  if ($book_id <= 0) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid book_id']);
+    exit;
+  }
+  $stmt = $conn->prepare("SELECT 1 FROM bookmark WHERE user_id=? AND book_id=?");
+  $stmt->bind_param('ii', $user_id, $book_id);
+  $stmt->execute();
+  $stmt->store_result();
+  echo json_encode(['bookmarked' => $stmt->num_rows > 0]);
+  exit;
+}
+
+// Toggle bookmark.
+if (isset($_GET['toggle_bookmark']) && $_SERVER['REQUEST_METHOD']==='POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  $book_id = (int)($data['book_id'] ?? 0);
+  if ($book_id <= 0) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid book_id']);
+    exit;
+  }
+
+  // Check existing.
+  $check = $conn->prepare("SELECT 1 FROM bookmark WHERE user_id=? AND book_id=?");
+  $check->bind_param('ii', $user_id, $book_id);
+  $check->execute();
+  $check->store_result();
+  if ($check->num_rows) {
+    // Remove.
+    $del = $conn->prepare("DELETE FROM bookmark WHERE user_id=? AND book_id=?");
+    $del->bind_param('ii', $user_id, $book_id);
+    $del->execute();
+    echo json_encode(['bookmarked' => false]);
+  } else {
+    // Add.
+    $ins = $conn->prepare("INSERT INTO bookmark (user_id,book_id) VALUES (?,?)");
+    $ins->bind_param('ii', $user_id, $book_id);
+    $ins->execute();
+    echo json_encode(['bookmarked' => true]);
+  }
+  exit;
+}
+
 // It’s a bad request if being hit here.
 http_response_code(400);
 echo json_encode(['error' => 'Invalid reader request']);
