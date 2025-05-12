@@ -14,7 +14,7 @@
     .filter-menu {display:none;position:absolute;top:100%;left:0;background:#f1efe3;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:6px;margin-top:6px;overflow:hidden;z-index:10;}
     .filter-menu div {padding:8px 12px;cursor:pointer;white-space:nowrap;}
     .filter-menu div:hover {background:#e0ddd0;}
-    .card {display:inline-block;width:160px;height:fit-content;margin:8px;padding:4px;border-radius:12px;overflow:hidden;cursor:pointer;background:transparent;}
+    .card {position:relative;display:inline-block;width:160px;height:fit-content;margin:8px;padding:4px;border-radius:12px;overflow:hidden;cursor:pointer;background:transparent;}
     .card:hover {background:#e0ddd0;opacity:0.9;}
     .card-img {width:160px;height:250px;border-radius:8px;object-fit:cover;display:block;}
     .progress-bar-container {height:4px;margin:4px 4px 0;background:#cdcdcd;}
@@ -112,6 +112,7 @@
             title="${book.title}\nBy ${book.writer}"
             onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}'">
             <img src="${book.cover_url}" class="card-img">
+            <img src="../assets/icon/star_filled.svg" style="position:absolute;top:8px;right:8px;width:24px;height:24px;pointer-events:none;">
             <div class="progress-bar-container">
               <div class="progress-bar-fill" style="width:${progress}%"></div>
             </div>

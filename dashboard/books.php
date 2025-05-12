@@ -36,13 +36,16 @@ $stmt = $conn->prepare("
     books.title,
     books.writer,
     COALESCE(reading_progress.location_current,0) AS location_current,
-    COALESCE(reading_progress.location_total,0) AS location_total
+    COALESCE(reading_progress.location_total,0) AS location_total,
+    IF(bookmark.user_id IS NULL, FALSE, TRUE) AS is_bookmarked
   FROM books
   LEFT JOIN reading_progress
     ON reading_progress.book_id = books.id AND reading_progress.user_id = ?
+  LEFT JOIN bookmark
+    ON bookmark.book_id = books.id AND bookmark.user_id = ?
   ORDER BY books.created_at DESC
 ");
-$stmt->bind_param('i', $user_id);
+$stmt->bind_param('ii', $user_id, $user_id);
 $stmt->execute();
 $res = $stmt->get_result();
 
