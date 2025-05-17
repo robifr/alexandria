@@ -89,7 +89,7 @@
         container.innerHTML += `
           <div class="card"
             title="${book.title}\nBy ${book.writer}"
-            onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}'">
+            onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}&from=bookmarks'">
             <img src="${book.cover_url}" class="card-img">
             <img src="../assets/icon/star_filled.svg" class="card-star-icon">
             <div class="progress-bar-container">

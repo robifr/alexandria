@@ -131,7 +131,7 @@
           `;
           // Redirect on row click except when clicking the remove button.
           row.addEventListener('click', () => {
-            window.location.href = `reader.html?id=${encodeURIComponent(book.id)}`;
+            window.location.href = `reader.html?id=${encodeURIComponent(book.id)}&from=history`;
           });
           // Remove button click.
           row.querySelector('.remove-btn').addEventListener('click', async (e) => {

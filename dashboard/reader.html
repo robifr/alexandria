@@ -61,11 +61,17 @@
   <script type="module">
     import '../library/foliate-js/view.js';
 
+    const params = new URLSearchParams(window.location.search);
+
     // Handle back button.
-    document.getElementById('back-button').addEventListener('click', () => history.back());
+    const from = params.get('from');
+    document.getElementById('back-button').addEventListener('click', () => {
+      if (from === 'bookmarks') window.location.href = 'bookmarks.html';
+      else if (from === 'history') window.location.href = 'history.html';
+      else window.location.href = 'books.html';
+    });
 
     // Get the book metadata from server.
-    const params = new URLSearchParams(location.search);
     const bookId = params.get('id');
     if (!bookId) throw new Error('Book ID is required.');
     const response = await fetch(`reader.php?id=${encodeURIComponent(bookId)}`);
