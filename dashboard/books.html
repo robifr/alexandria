@@ -14,6 +14,7 @@
     .filter-menu {display:none;position:absolute;top:100%;left:0;background:#f1efe3;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:6px;margin-top:6px;overflow:hidden;z-index:10;}
     .filter-menu div {padding:8px 12px;cursor:pointer;white-space:nowrap;}
     .filter-menu div:hover {background:#e0ddd0;}
+    .filter-menu div.active {background:#d4c7b0;font-weight:bold;}
     .card {position:relative;display:inline-block;width:160px;height:fit-content;margin:8px;padding:4px;border-radius:12px;overflow:hidden;cursor:pointer;background:transparent;}
     .card:hover {background:#e0ddd0;opacity:0.9;}
     .card-img {width:160px;height:250px;border-radius:8px;object-fit:cover;display:block;}
@@ -63,15 +64,11 @@
 
   <div style="display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid #ddd;position:relative;">
     <div style="position:relative;">
-      <button class="filter-btn" onclick="toggleMenu('category')">
+      <button class="filter-btn">
         Category
         <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" style="width:20px;height:20px;">
       </button>
-      <div id="menu-category" class="filter-menu">
-        <div>History</div>
-        <div>Science</div>
-        <div>Biography</div>
-      </div>
+      <div id="menu-category" class="filter-menu"></div>
     </div>
   </div>
 
@@ -224,6 +221,40 @@
           } else {
             renderBooks(allBooks);
           }
+      });
+
+    fetch('books.php?categories=1')
+      .then(res => res.json())
+      .then(categories => {
+        const menu = document.getElementById('menu-category');
+
+        // Helper to render category item.
+        function createCategoryItem(label, filterFn) {
+          const item = document.createElement('div');
+          item.textContent = label;
+          item.onclick = () => {
+            // Remove active state from all items.
+            document.querySelectorAll('#menu-category div').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+            // Apply filter
+            renderBooks(filterFn());
+            document.querySelector('.filter-btn.active')?.classList.remove('active');
+            menu.style.display = 'none';
+          };
+          return item;
+        }
+
+        // Add "All" as first item and set as default active.
+        const allItem = createCategoryItem('All', () => allBooks);
+        allItem.classList.add('active');
+        menu.appendChild(allItem);
+        // Add other categories.
+        categories.forEach(cat => {
+          const item = createCategoryItem(cat.category_name, () => 
+            allBooks.filter(book => (book.categories || []).includes(cat.category_name))
+          );
+          menu.appendChild(item);
+        });
       });
 
     document.querySelectorAll('.filter-btn').forEach(btn => {

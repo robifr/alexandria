@@ -28,6 +28,16 @@ if (isset($_GET['cover'])) {
   exit;
 }
 
+if (isset($_GET['categories'])) {
+  $result = $conn->query("SELECT id, category_name FROM category ORDER BY category_name ASC");
+  $categories = [];
+  while ($row = $result->fetch_assoc()) {
+    $categories[] = $row;
+  }
+  echo json_encode($categories, JSON_UNESCAPED_UNICODE);
+  exit;
+}
+
 // Otherwise, return JSON list with per-user last location.
 header('Content-Type: application/json');
 $stmt = $conn->prepare("
@@ -50,9 +60,36 @@ $stmt->execute();
 $res = $stmt->get_result();
 
 $books = [];
+$book_ids = [];
 while ($row = $res->fetch_assoc()) {
   $row['cover_url'] = "books.php?cover=" . $row['id'];
   $row['epub_url'] = "reader.php?epub=" . $row['id'];
   $books[] = $row;
+  $book_ids[] = (int)$row['id'];
 }
+
+// Get all categories for all books.
+$cat_map = [];
+if (!empty($book_ids)) {
+  $placeholders = implode(',', array_fill(0, count($book_ids), '?'));
+  $types = str_repeat('i', count($book_ids));
+  $cat_stmt = $conn->prepare("
+    SELECT book_category.book_id, category.category_name
+    FROM book_category
+    JOIN category ON category.id = book_category.category_id
+    WHERE book_category.book_id IN ($placeholders)
+  ");
+  $cat_stmt->bind_param($types, ...$book_ids);
+  $cat_stmt->execute();
+  $cat_result = $cat_stmt->get_result();
+  while ($row = $cat_result->fetch_assoc()) {
+    $cat_map[$row['book_id']][] = $row['category_name'];
+  }
+}
+
+// Assign categories to each book.
+foreach ($books as &$book) {
+  $book['categories'] = $cat_map[$book['id']] ?? [];
+}
+
 echo json_encode($books, JSON_UNESCAPED_UNICODE);

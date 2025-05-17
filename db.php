@@ -59,7 +59,7 @@ if ($rp_check->num_rows == 0) {
     book_id INT NOT NULL,
     last_cfi VARCHAR(255) NULL, -- EPUB CFI string.
     location_current INT NOT NULL, -- Last read location in EPUB.
-    location_total INT NOT NULL, -- Totallocation in EPUB.
+    location_total INT NOT NULL, -- Total location in EPUB.
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY(user_id, book_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -77,6 +77,26 @@ if ($bookmark_check->num_rows == 0) {
     UNIQUE KEY(user_id, book_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+  )");
+}
+
+$category_check = $conn->query("SHOW TABLES LIKE 'category'");
+if ($category_check->num_rows == 0) {
+  $conn->query("CREATE TABLE IF NOT EXISTS category (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL UNIQUE
+  )");
+}
+
+$book_categories_check = $conn->query("SHOW TABLES LIKE 'book_category'");
+if ($book_categories_check->num_rows == 0) {
+  $conn->query("CREATE TABLE IF NOT EXISTS book_category (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT NOT NULL,
+    category_id INT NOT NULL,
+    UNIQUE KEY(book_id, category_id),
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
   )");
 }
 ?>
