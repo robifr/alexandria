@@ -47,7 +47,7 @@
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
         <img src="../assets/icon/search.svg" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
-        <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;">
+        <input id="global-search-input" onkeydown="handleGlobalSearch(event)" type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;">
       </div>
       <img src="../assets/icon/account.svg" alt="Account" style="width:40px;height:40px;cursor:pointer;">
     </div>
@@ -58,7 +58,7 @@
     <div class="sidebar">
       <div class="search-bar">
         <img src="../assets/icon/search.svg">
-        <input type="text" placeholder="Search reading history…">
+        <input type="text" placeholder="Search reading history…"  oninput="searchHistory()">
       </div>
       <div class="clear-history" onclick="clearAllHistory()">Clear all reading history</div>
     </div>
@@ -94,10 +94,17 @@
         else if (tab === 'History') window.location.href = 'history.html';
       });
     });
-  
+
+    // Search algorithm.
+    let fullHistory = {};
+
     async function loadHistory() {
       const res = await fetch('history.php');
-      const historyData = await res.json();
+      fullHistory = await res.json();
+      renderHistory(fullHistory);
+    }
+
+    function renderHistory(historyData) {
       const container = document.getElementById('history-list');
       container.innerHTML = '';
 
@@ -135,7 +142,25 @@
         });
       }
     }
-  
+
+    function searchHistory() {
+      const query = document.querySelector('.search-bar input').value.toLowerCase().trim();
+      if (query === '') {
+        renderHistory(fullHistory);
+        return;
+      }
+
+      const filtered = {};
+      for (const date in fullHistory) {
+        const books = fullHistory[date].filter(book =>
+          book.title.toLowerCase().includes(query) ||
+          book.writer.toLowerCase().includes(query)
+        );
+        if (books.length > 0) filtered[date] = books;
+      }
+      renderHistory(filtered);
+    }
+
     async function removeFromHistory(bookId, btn) {
       await fetch('history.php?remove=1', {
         method: 'POST',
@@ -167,6 +192,15 @@
     }
 
     loadHistory();
+    // search form to books.html
+    function handleGlobalSearch(event) {
+      if (event.key === 'Enter') {
+        const keyword = event.target.value.trim();
+        if (keyword) {
+          window.location.href = `books.html?search=${encodeURIComponent(keyword)}`;
+        }
+      }
+    }
   </script>
 </body>
 </html>
