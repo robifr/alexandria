@@ -1,61 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back" />
-<title>Learn more</title>
-<style>
-    .icon-button {background: #333; padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin-bottom: 0px; text-decoration: none; transition: background-color 0.3s ease;}
-    .icon-button span {color: white; font-size: 50px; transition: color 0.3s ease;}
-    .icon-button:hover span {color: #bbb;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Learn more - Alexandria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    * {box-sizing:border-box;margin:0;padding:0}
+    body {font-family:'Roboto Slab',serif;background:#f9f5e8;display:flex;flex-direction:column;min-height:100vh}
+    #back-button {width:40px;height:40px;padding:10px;border-radius:50%;background:#d4c7b0;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;margin:16px;transition:background-color .3s}
+    section#learn-more {flex:1;padding:40px;color:#333}
+    h2 {font-size:32px;margin-bottom:20px}
+    h3 {margin-top:24px;font-size:20px;color:#555;text-decoration:underline}
+    p, ul {margin-top:16px;margin-left:16px;line-height:1.6;font-size:1.1rem}
+    ul {padding-left:20px}
+    
+    ::-webkit-scrollbar {width:8px;background-color:rgba(0,0,0,0);}
+    ::-webkit-scrollbar:hover {background-color:rgba(0, 0, 0, 0.09);}
+    ::-webkit-scrollbar-thumb:vertical {background:rgba(0,0,0,0.5);}
+    ::-webkit-scrollbar-thumb:vertical:active {background:rgba(0,0,0,0.61);}
   </style>
 </head>
-<body style="background: #f1efe3;">
-   <a href="auth.html" class="icon-button">
-    <span class="material-symbols-outlined">arrow_back</span>
-  </a>
-    <section id="learn-more" style="padding: 40px; font-family: 'Poppins', sans-serif;">
-  <h2 style="font-size: 32px; margin-bottom: 20px; margin-top: 0px;">Learn More: Tentang Alexandria</h2>
+<body>
+  <button id="back-button" onclick="location.href='auth.html'">
+    <img src="../assets/icon/arrow_back.svg" alt="Back" style="width:24px;height:24px">
+  </button>
+  <section id="learn-more">
+    <h2>Tentang Alexandria</h2>
 
-  <h3 style="color: #2c3e50;">Latar Belakang</h3>
-  <p style="line-height: 1.6;">
-    Di era digital yang serba cepat ini, akses terhadap buku dan literatur masih menjadi tantangan bagi banyak orang. 
-    Banyak pelajar, mahasiswa, dan masyarakat umum yang ingin membaca namun terkendala biaya, ketersediaan fisik buku, 
-    atau waktu untuk ke perpustakaan.
-  </p>
-  <p style="line-height: 1.6;">
-    Literasi juga menjadi isu penting di Indonesia. Tingkat minat baca masih tergolong rendah dibandingkan negara lain. 
-    Padahal, membaca adalah dasar dari pengetahuan, imajinasi, dan perkembangan pribadi.
-  </p>
+    <h3>Latar Belakang</h3>
+    <p>Di era digital, kendala akses buku tidak hanya soal jarak ke perpustakaan atau biaya. Bagi kami, masalah aksesibilitas bagi penyandang disabilitas ataupun lansia juga sama pentingnya.</p>
+    <p>Minat baca di Indonesia juga masih tergolong rendah. Padahal dengan membaca, kita dapat memperkaya imajinasi, menambah wawasan, dan mengembangkan diri.</p>
 
-  <h3 style="color: #2c3e50;">Masalah yang Dihadapi</h3>
-  <ul style="line-height: 1.8;">
-    <li>Akses terhadap buku fisik terbatas oleh jarak, waktu, dan biaya.</li>
-    <li>Kebiasaan membaca kurang karena tidak adanya platform yang praktis dan menarik.</li>
-    <li>Koleksi buku digital legal masih belum banyak dikenal publik.</li>
-    <li>Tidak ada tempat terpusat untuk menyimpan dan membaca buku secara digital.</li>
-  </ul>
+    <h3>Masalah yang Dihadapi</h3>
+    <ul>
+      <li>Buku fisik yang sulit dijangkau karena jarak, waktu, atau biaya.</li>
+      <li>Ukuran teks di banyak platform terlalu kecil untuk lansia.</li>
+      <li>Pilihan warna dan kontras sering tidak ramah bagi buta warna.</li>
+      <li>Koleksi e-book legal dan mudah diakses masih terbatas.</li>
+      <li>Tidak ada tempat terpusat untuk menyimpan dan membaca buku secara digital.</li>
+    </ul>
 
-  <h3 style="color: #2c3e50;">Tujuan Alexandria</h3>
-  <p style="line-height: 1.6;">
-    <strong>Alexandria</strong> hadir sebagai solusi digital untuk mendekatkan masyarakat dengan dunia literasi. 
-    Tujuan utama kami adalah:
-  </p>
-  <ul style="line-height: 1.8;">
-    <li> Menyediakan <strong>platform baca buku online</strong> yang mudah diakses dan user-friendly.</li>
-    <li> Mendorong kebiasaan membaca di kalangan pelajar dan mahasiswa.</li>
-    <li> Menyediakan koleksi buku legal, gratis, dan berkualitas.</li>
-    <li> Menjadi ruang digital untuk eksplorasi genre dan pengetahuan baru.</li>
-    <li> Mempermudah pengguna menyimpan buku favorit dan melacak riwayat baca.</li>
-  </ul>
-  <p style="line-height: 1.6;">
-    Kami percaya bahwa dengan membaca, seseorang bisa mengubah cara berpikir, memperluas wawasan, 
-    dan membuka jalan menuju masa depan yang lebih baik.
-  </p>
-</section>
+    <h3>Tujuan</h3>
+    <p>Alexandria hadir sebagai solusi digital untuk mendekatkan masyarakat dengan dunia literasi.</br>Tujuan utama kami adalah:</p>
+    <ul style="margin-left:32px">
+      <li> Menyediakan platform baca buku online yang mudah diakses dan user-friendly bagi semua kalangan.</li>
+      <li> Mendorong kebiasaan membaca bagi semua orang.</li>
+      <li> Menyediakan koleksi buku legal, gratis, dan berkualitas.</li>
+      <li> Menjadi ruang digital untuk eksplorasi genre dan pengetahuan baru.</li>
+      <li> Mempermudah pengguna menyimpan buku favorit dan melacak riwayat baca.</li>
+    </ul>
+    <p>Kami yakin bahwa akses literasi yang ramah akan membuka pintu kreativitas dan peluang bagi semua.</p>
+  </section>
 </body>
 </html>
