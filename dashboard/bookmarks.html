@@ -57,8 +57,9 @@
       <div style="position:relative;">
         <img src="../assets/icon/search.svg" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
         <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
+        <img src="../assets/icon/mic.svg" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
       </div>
-      <img id="settings-icon" src="../assets/icon/settings.svg" alt="Settings" style="width:36px;height:36px;cursor:pointer;" onclick="document.getElementById('settings-dialog').showModal()">
+      <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;" onclick="document.getElementById('settings-dialog').showModal()">
     </div>
   </div>
 
@@ -75,7 +76,7 @@
   <div id="book-list" style="flex:1;display:flex;flex-wrap:wrap;gap:20px;padding:20px;overflow:auto;"></div>
 
   <dialog id="settings-dialog" style="position:relative;width:460px;max-width:90vw;padding:0;border:none;border-radius:12px;background:#f1efe3;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:'Roboto Slab',serif;overflow:hidden;max-height:80vh;">
-    <button style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;outline:none;"
+    <button title="Close" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;outline:none;"
       onclick="document.getElementById('settings-dialog').close()">
       ×
     </button>
