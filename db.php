@@ -2,9 +2,10 @@
 ini_set('memory_limit', '512M'); // RAM for large BLOBs.
 ini_set('max_execution_time', 300); // Up to 5 minutes per request.
 
-$host = "localhost";
-$user = "root";
-$pass = "";
+$config = require __DIR__ . '/config.php';
+$host = $config['DB_HOST'];
+$user = $config['DB_USER'];
+$pass = $config['DB_PASS'];
 
 // Connect without specifying a database.
 $conn = new mysqli($host, $user, $pass);
