@@ -1,13 +1,38 @@
 <?php
 session_start();
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 if (empty($_SESSION['user_id'])) {
   http_response_code(401);
   echo json_encode(['error' => 'Not authenticated']);
   exit;
 }
 $user_id = (int)$_SESSION['user_id'];
+$username = $_SESSION['username'];
 
 include '../db.php';
+
+// Serve logout.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  if (!empty($data['logout'])) {
+    session_destroy();
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
+    exit;
+  }
+}
+
+// Serve user session.
+if (isset($_GET['user'])) {
+  header('Content-Type: application/json');
+  echo json_encode([
+    'id' => $user_id,
+    'username' => $username
+  ]);
+  exit;
+}
 
 // Serve cover images.
 if (isset($_GET['cover'])) {
@@ -28,6 +53,7 @@ if (isset($_GET['cover'])) {
   exit;
 }
 
+// Serve list of categories.
 if (isset($_GET['categories'])) {
   $result = $conn->query("SELECT id, category_name FROM category ORDER BY category_name ASC");
   $categories = [];

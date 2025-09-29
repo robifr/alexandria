@@ -1,14 +1,38 @@
 <?php
 session_start();
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 if (empty($_SESSION['user_id'])) {
   http_response_code(401);
-  echo json_encode(['error'=>'Not authenticated']);
+  echo json_encode(['error' => 'Not authenticated']);
   exit;
 }
 $user_id = (int)$_SESSION['user_id'];
+$username = $_SESSION['username'];
 
 include '../db.php';
-header('Content-Type: application/json');
+
+// Serve logout.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  if (!empty($data['logout'])) {
+    session_destroy();
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
+    exit;
+  }
+}
+
+// Serve user session.
+if (isset($_GET['user'])) {
+  header('Content-Type: application/json');
+  echo json_encode([
+    'id' => $user_id,
+    'username' => $username
+  ]);
+  exit;
+}
 
 // Serve cover images.
 if (isset($_GET['cover'])) {
@@ -30,6 +54,7 @@ if (isset($_GET['cover'])) {
 
 // Remove single history entry.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['remove'])) {
+  header('Content-Type: application/json');
   $data = json_decode(file_get_contents('php://input'), true);
   if (isset($data['book_id'])) {
     $book_id = intval($data['book_id']);
@@ -50,11 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['clear'])) {
   $stmt = $conn->prepare("DELETE FROM reading_progress WHERE user_id=?");
   $stmt->bind_param('i', $user_id);
   $stmt->execute();
+  header('Content-Type: application/json');
   echo json_encode(['success' => true]);
   exit;
 }
 
 // Fetch history grouped by date.
+header('Content-Type: application/json');
 $stmt = $conn->prepare("
   SELECT 
     DATE(updated_at) as read_date,

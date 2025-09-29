@@ -1,5 +1,8 @@
 <?php
-session_start();   
+session_start(); 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");  
 include '../db.php';
 
 $username = $_POST['username'];
@@ -18,6 +21,7 @@ if ($stmt->num_rows > 0) {
   if (password_verify($password, $hashed)) {
     // Store user ID as current session.
     $_SESSION['user_id'] = $user_id;
+    $_SESSION['username'] = $username;
     echo "<script>window.location.href='../dashboard/books.html';</script>";
   } else {
     // Wrong password.
