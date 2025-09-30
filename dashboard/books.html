@@ -15,6 +15,7 @@
     .filter-menu div {padding:8px 12px;cursor:pointer;white-space:nowrap;}
     .filter-menu div:hover {background:#dbd7c1;}
     .filter-menu div.active {background:#d4c7b0;font-weight:bold;}
+
     .card {position:relative;display:inline-block;width:160px;height:fit-content;margin:8px;padding:4px;border-radius:12px;overflow:hidden;cursor:pointer;background:transparent;}
     .card:hover {background:#dbd7c1;opacity:0.9;}
     .card-img {width:160px;height:250px;border-radius:8px;object-fit:cover;display:block;}
@@ -52,6 +53,8 @@
       <div class="nav-item selected">Books</div>
       <div class="nav-item">Bookmarks</div>
       <div class="nav-item">History</div>
+      <div class="nav-item">Manage Books</div>
+      <div class="nav-item">Manage Categories</div>
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
@@ -62,7 +65,7 @@
       <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
         onclick="
           fetch('books.php?user=1')
-              .then(res => res.json())
+            .then(res => res.json())
             .then(data => document.getElementById('username').textContent = data.username);
           document.getElementById('settings-dialog').showModal();">
     </div>
@@ -160,7 +163,6 @@
     </div>
   </dialog>
 
-  <!-- Scripts -->
   <script>
     // Navigation.
     document.querySelectorAll('.nav-item').forEach(el => {
@@ -168,9 +170,11 @@
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('selected'));
         el.classList.add('selected');
         const tab = el.textContent.trim();
-        if (tab === 'Books') window.location.href = 'books.html';
-        else if (tab === 'Bookmarks') window.location.href = 'bookmarks.html';
-        else if (tab === 'History') window.location.href = 'history.html';
+        if (tab === 'Books') window.location.replace('books.html');
+        else if (tab === 'Bookmarks') window.location.replace('bookmarks.html');
+        else if (tab === 'History') window.location.replace('history.html');
+        else if (tab === 'Manage Books') window.location.replace('../admin/manage-books.html');
+        else if (tab === 'Manage Categories') window.location.replace('../admin/manage-categories.html');
       });
     });
 

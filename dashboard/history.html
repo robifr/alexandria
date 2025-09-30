@@ -56,6 +56,8 @@
       <div class="nav-item">Books</div>
       <div class="nav-item">Bookmarks</div>
       <div class="nav-item selected">History</div>
+      <div class="nav-item">Manage Books</div>
+      <div class="nav-item">Manage Categories</div>
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
@@ -190,9 +192,11 @@
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('selected'));
         el.classList.add('selected');
         const tab = el.textContent.trim();
-        if (tab === 'Books') window.location.href = 'books.html';
-        else if (tab === 'Bookmarks') window.location.href = 'bookmarks.html';
-        else if (tab === 'History') window.location.href = 'history.html';
+        if (tab === 'Books') window.location.replace('books.html');
+        else if (tab === 'Bookmarks') window.location.replace('bookmarks.html');
+        else if (tab === 'History') window.location.replace('history.html');
+        else if (tab === 'Manage Books') window.location.replace('../admin/manage-books.html');
+        else if (tab === 'Manage Categories') window.location.replace('../admin/manage-categories.html');
       });
     });
     

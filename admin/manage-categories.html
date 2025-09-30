@@ -2,35 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bookmarks - Alexandria</title>
+  <title>Manage Categories - Alexandria</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
     body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;}
     .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
     .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
-    .filter-btn {display:flex;align-items:center;gap:8px;cursor:pointer;color:#333;border:none;border-bottom:2px solid transparent;background:transparent;font-family:'Roboto Slab',serif;font-size:1rem;position:relative;padding:6px 0;}
-    .filter-btn.active {border-bottom:2px solid #333;}
-    .filter-menu {display:none;position:absolute;top:100%;left:0;background:#f3ecd3;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:6px;margin-top:6px;overflow:hidden;z-index:10;}
-    .filter-menu div {padding:8px 12px;cursor:pointer;white-space:nowrap;}
-    .filter-menu div:hover {background:#dbd7c1;}
-    .filter-menu div.active {background:#d4c7b0;font-weight:bold;}
-
-    .card {position:relative;display:inline-block;width:160px;height:fit-content;margin:8px;padding:4px;border-radius:12px;overflow:hidden;cursor:pointer;background:transparent;}
-    .card:hover {background:#dbd7c1;opacity:0.9;}
-    .card-img {width:160px;height:250px;border-radius:8px;object-fit:cover;display:block;}
-    .card-star-icon {position:absolute;top:8px;right:8px;width:28px;height:28px;pointer-events:none;filter:drop-shadow(0 0 2px rgba(0,0,0,0.7));}
-    .progress-bar-container {height:4px;margin:4px 4px 0;background:#c2c2c2;}
-    .progress-bar-fill {height:100%;background:#333;}
-    .card-content {padding:8px;}
-    .card-title {font-weight:bold;font-size:0.75rem;text-align:center;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal;}
-    .card-writer {font-size:0.7rem;text-align:center;color:#555;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal;}
 
     ::-webkit-scrollbar {width:8px;background-color:rgba(0,0,0,0);}
     ::-webkit-scrollbar:hover {background-color:rgba(0, 0, 0, 0.09);}
     ::-webkit-scrollbar-thumb:vertical {background:rgba(0,0,0,0.5);}
     ::-webkit-scrollbar-thumb:vertical:active {background:rgba(0,0,0,0.61);}
-    
+
     /* Settings dialog. */
     #settings-scroll-area::-webkit-scrollbar {display:none;}
     .switch {position:relative;display:inline-block;width:40px;height:20px;}
@@ -43,6 +27,10 @@
     /* Slider. */
     input[type="range"]::-webkit-slider-thumb {-webkit-appearance:none;height:16px;width:16px;border-radius:50%;background:#666;cursor:pointer;}
     input[type="range"]::-moz-range-thumb {height:16px;width:16px;border-radius:50%;background:#d4c7b0;cursor:pointer;}
+    
+    /* Edit mode styles. */
+    .edit-mode .action-buttons {display:flex;gap:4px;justify-content:center;}
+    .edit-mode .action-buttons button {padding:4px 8px;border:none;border-radius:6px;cursor:pointer;color:#fff;}
   </style>
 </head>
 <body>
@@ -51,10 +39,10 @@
     <h1 style="margin:0;font-size:1.8rem;color:#333;">Alexandria</h1>
     <div style="flex:1;display:flex;justify-content:center;gap:24px;">
       <div class="nav-item">Books</div>
-      <div class="nav-item selected">Bookmarks</div>
+      <div class="nav-item">Bookmarks</div>
       <div class="nav-item">History</div>
       <div class="nav-item">Manage Books</div>
-      <div class="nav-item">Manage Categories</div>
+      <div class="nav-item selected">Manage Categories</div>
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
@@ -64,24 +52,56 @@
       </div>
       <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
         onclick="
-          fetch('bookmarks.php?user=1')
+          fetch('manage-categories.php?user=1')
             .then(res => res.json())
             .then(data => document.getElementById('username').textContent = data.username);
           document.getElementById('settings-dialog').showModal();">
     </div>
   </div>
 
-  <div style="display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid #ddd;position:relative;">
-    <div style="position:relative;">
-      <button class="filter-btn">
-        Category
-        <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" style="width:20px;height:20px;">
+  <div class="category-list" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin:0 auto;padding:20px;">
+    <form id="add-form" autocomplete="off" style="display:flex;gap:8px;margin-bottom:12px;width:55%;">
+      <input type="text" id="new-category" placeholder="Category name..." required 
+        style="flex:1;padding:10px 10px;border:1px solid #c9c4ad;border-radius:6px;background:#f7f1df;">
+      <button type="submit" id="submit-button"
+        style="padding:10px 20px;border:none;background:#333;color:#fff;border-radius:6px;cursor:pointer;">
+        Add
       </button>
-      <div id="menu-category" class="filter-menu"></div>
-    </div>
+      <button type="button" id="cancel-edit" style="padding:10px 20px;border:1px solid #333;background:transparent;color:#333;border-radius:6px;cursor:pointer;display:none;"
+        onclick="resetForm();">
+        Cancel
+      </button>
+    </form>
+
+    <table id="categories" style="width:55%;border-collapse:collapse;background:#f7f1df;border-radius:8px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:10px;background:#dbd7c1;">Category Name</th>
+          <th style="text-align:center;padding:10px;background:#dbd7c1;">Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <div id="book-list" style="flex:1;display:flex;flex-wrap:wrap;gap:20px;padding:20px;overflow:auto;"></div>
+  <div id="confirm-delete-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);justify-content:center;align-items:center;z-index:1001;">
+    <div style="position:relative;background:#f3ecd3;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.2);max-width:420px;width:100%;font-family:'Roboto Slab',serif;color:#333;box-sizing:border-box;">
+      <div style="padding:16px 24px 60px 24px;">
+        <h2 id="delete-dialog-title" style="margin:0 0 6px 0;font-size:1.1rem;font-weight:600;text-align:left;">Delete category "$category_name"?</h2>
+        <p style="margin:0;font-size:0.85rem;color:#555;line-height:1.4;text-align:left;">
+          This will permanently remove the category and all its associated data. This action cannot be undone. Are you sure want to continue?
+        </p>
+      </div>
+      <div style="position:absolute;bottom:12px;right:12px;display:flex;gap:8px;">
+        <button id="cancel-delete-btn" style="background:#cfccc4;color:#333;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
+          Cancel
+        </button>
+        <button id="confirm-delete-btn" style="background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
 
   <dialog id="settings-dialog" style="position:relative;width:460px;max-width:90vw;padding:0;border:none;border-radius:12px;background:#f3ecd3;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:'Roboto Slab',serif;overflow:hidden;max-height:80vh;">
     <button title="Close" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;outline:none;"
@@ -146,7 +166,7 @@
           <span id="username" style="font-size:1rem;"></span>
           <button id="logout-btn"
             onclick="
-              fetch('bookmarks.php', {
+              fetch('manage-categories.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ logout: true })
@@ -170,14 +190,14 @@
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('selected'));
         el.classList.add('selected');
         const tab = el.textContent.trim();
-        if (tab === 'Books') window.location.replace('books.html');
-        else if (tab === 'Bookmarks') window.location.replace('bookmarks.html');
-        else if (tab === 'History') window.location.replace('history.html');
-        else if (tab === 'Manage Books') window.location.replace('../admin/manage-books.html');
-        else if (tab === 'Manage Categories') window.location.replace('../admin/manage-categories.html');
+        if (tab === 'Books') window.location.replace('../dashboard/books.html');
+        else if (tab === 'Bookmarks') window.location.replace('../dashboard/bookmarks.html');
+        else if (tab === 'History') window.location.replace('../dashboard/history.html');
+        else if (tab === 'Manage Books') window.location.replace('manage-books.html');
+        else if (tab === 'Manage Categories') window.location.replace('manage-categories.html');
       });
     });
-    
+
     // Close settings dialog when anywhere outside.
     window.onclick = e => {
       if (e.target === document.getElementById('settings-dialog')) {
@@ -185,113 +205,109 @@
       };
     }
 
-    let allBooks = [];
-
-    function renderBooks(books) {
-      const container = document.getElementById('book-list');
-      container.innerHTML = '';
-      books.forEach(book => {
-        const progress = book.location_total
-          ? Math.min(1, book.location_current / book.location_total) * 100 : 0;
-        container.innerHTML += `
-          <div class="card"
-            title="${book.title}\nBy ${book.writer}"
-            onclick="location.href='reader.html?id=${encodeURIComponent(book.id)}&from=bookmarks'">
-            <img src="${book.cover_url}" class="card-img">
-            <img src="../assets/icon/star_filled.svg" class="card-star-icon">
-            <div class="progress-bar-container">
-              <div class="progress-bar-fill" style="width:${progress}%"></div>
-            </div>
-            <div class="card-content">
-              <div class="card-title">${book.title}</div>
-              <div class="card-writer">${book.writer}</div>
-            </div>
-          </div>`;
-      });
-    }
-
-    function searchBooks() {
-      const query = document.querySelector('input[type="text"]').value.toLowerCase().trim();
-      if (query === '') {
-        renderBooks(allBooks);
-      } else {
-        const filtered = allBooks.filter(book =>
-          book.title.toLowerCase().includes(query) ||
-          book.writer.toLowerCase().includes(query)
-        );
-        renderBooks(filtered);
-      }
-    }
-
-    // Fetch all books on initial load.
-    fetch('bookmarks.php')
-      .then(res => {
-        if (res.status === 401) window.location.href = '../auth/auth.html';
-        return res.json();
-      })
-      .then(books => {
-        allBooks = books;
-        renderBooks(allBooks);
-      });
-
-    fetch('books.php?categories=1')
-      .then(res => res.json())
-      .then(categories => {
-        const menu = document.getElementById('menu-category');
-
-        // Helper to render category item.
-        function createCategoryItem(label, filterFn) {
-          const item = document.createElement('div');
-          item.textContent = label;
-          item.onclick = () => {
-            // Remove active state from all items.
-            document.querySelectorAll('#menu-category div').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
-            // Apply filter
-            renderBooks(filterFn());
-            document.querySelector('.filter-btn.active')?.classList.remove('active');
-            menu.style.display = 'none';
-          };
-          return item;
-        }
-
-        // Add "All" as first item and set as default active.
-        const allItem = createCategoryItem('All', () => allBooks);
-        allItem.classList.add('active');
-        menu.appendChild(allItem);
-        // Add other categories.
-        categories.forEach(cat => {
-          const item = createCategoryItem(cat.category_name, () => 
-            allBooks.filter(book => (book.categories || []).includes(cat.category_name))
-          );
-          menu.appendChild(item);
+    // Fetch categories.
+    function loadCategories() {
+      fetch('manage-categories.php')
+        .then(res => res.json())
+        .then(cats => {
+          const tbody = document.querySelector('#categories tbody');
+          tbody.innerHTML = '';
+          cats.forEach(cat => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td style="padding:10px;border-bottom:1px solid #ddd;">${cat.category_name}</td>
+              <td style="text-align:center;padding:10px;border-bottom:1px solid #ddd;" class="action-buttons">
+                <button onclick='editCategory(${cat.id}, ${JSON.stringify(cat.category_name)})'
+                  style="padding:4px 8px;border:none;border-radius:6px;cursor:pointer;background:#3498db;color:#fff;">
+                  Edit
+                </button>
+                <button onclick='deleteCategory(${cat.id}, ${JSON.stringify(cat.category_name)})'
+                  style="padding:4px 8px;border:none;border-radius:6px;cursor:pointer;background:#c0392b;color:#fff;">
+                  Delete
+                </button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
         });
-      });
+    }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const menu = btn.nextElementSibling;
-        const icon = btn.querySelector('img');
-        const isOpen = menu.style.display === 'block';
-        // Close all menus first.
-        document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.filter-btn img').forEach(i => i.src = '../assets/icon/arrow_drop_down.svg');
-        if (!isOpen) {
-          menu.style.display = 'block';
-          btn.classList.add('active');
-          icon.src = '../assets/icon/arrow_drop_up.svg';
-        }
-      });
-    });
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.filter-btn') && !e.target.closest('.filter-menu')) {
-        document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.filter-btn img').forEach(i => i.src = '../assets/icon/arrow_drop_down.svg');
+    // Variables for edit mode.
+    let editingId = null;
+    // Add or Update category.
+    document.getElementById('add-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('new-category').value.trim();
+      if (!name) return;
+      
+      if (editingId) {
+        // Update existing category
+        fetch('manage-categories.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "id": editingId, "name": name, "action": "update" })
+        }).then(() => {
+          resetForm();
+          loadCategories();
+        });
+      } else {
+        // Add new category
+        fetch('manage-categories.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "name": name })
+        }).then(() => {
+          document.getElementById('new-category').value = '';
+          loadCategories();
+        });
       }
     });
+
+    // Edit category - populate form and change to edit mode
+    function editCategory(id, name) {
+      editingId = id;
+      document.getElementById('new-category').value = name;
+      document.getElementById('submit-button').textContent = 'Save';
+      document.getElementById('cancel-edit').style.display = 'inline-block';
+    }
+
+    // Reset form to add mode.
+    function resetForm() {
+      editingId = null;
+      document.getElementById('new-category').value = '';
+      document.getElementById('submit-button').textContent = 'Add';
+      document.getElementById('cancel-edit').style.display = 'none';
+    }
+
+    // Delete category.
+    const confirmDialog = document.getElementById('confirm-delete-dialog');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const deleteDialogTitle = document.getElementById('delete-dialog-title');
+    async function deleteCategory(id, name) {
+      deleteDialogTitle.textContent = `Delete category "${name}"?`;
+
+      confirmDialog.style.display = 'flex';
+      return new Promise(resolve => {
+        // Confirm delete.
+        confirmDeleteBtn.onclick = async () => {
+          confirmDialog.style.display = 'none';
+          await fetch('manage-categories.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "id": id })
+          }).then(() => loadCategories());
+          resolve();
+        };
+        // Cancel clear.
+        cancelDeleteBtn.onclick = () => {
+          confirmDialog.style.display = 'none';
+          resolve();
+        };
+      });
+    }
+
+    loadCategories();
   </script>
 </body>
 </html>
