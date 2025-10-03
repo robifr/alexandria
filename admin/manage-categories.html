@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
-    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;}
+    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
     .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
     .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
 
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="category-list" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin:0 auto;padding:20px;">
+  <div class="category-list" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin:0 auto;padding:20px;overflow:auto;">
     <form id="add-form" autocomplete="off" style="display:flex;gap:8px;margin-bottom:12px;width:55%;">
       <input type="text" id="new-category" placeholder="Category name..." required 
         style="flex:1;padding:10px 10px;border:1px solid #c9c4ad;border-radius:6px;background:#f7f1df;">
@@ -73,7 +73,7 @@
       </button>
     </form>
 
-    <table id="categories" style="width:55%;border-collapse:collapse;background:#f7f1df;border-radius:8px;overflow:hidden;">
+    <table id="categories" style="width:55%;border-collapse:collapse;background:#f7f1df;border-radius:8px;">
       <thead>
         <tr>
           <th style="text-align:left;padding:10px;background:#dbd7c1;">Category Name</th>
@@ -218,11 +218,11 @@
               <td style="padding:10px;border-bottom:1px solid #ddd;">${cat.category_name}</td>
               <td style="text-align:center;padding:10px;border-bottom:1px solid #ddd;" class="action-buttons">
                 <button onclick='editCategory(${cat.id}, ${JSON.stringify(cat.category_name)})'
-                  style="padding:4px 8px;border:none;border-radius:6px;cursor:pointer;background:#3498db;color:#fff;">
+                  style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#f0c420;color:#444;">
                   Edit
                 </button>
                 <button onclick='deleteCategory(${cat.id}, ${JSON.stringify(cat.category_name)})'
-                  style="padding:4px 8px;border:none;border-radius:6px;cursor:pointer;background:#c0392b;color:#fff;">
+                  style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#c0392b;color:#fff;">
                   Delete
                 </button>
               </td>
