@@ -36,11 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bookFile = $_FILES['book_file'];
     $bookMime = mime_content_type($bookFile['tmp_name']);
     $bookFileName = basename($bookFile['name']);
-    $bookPath = '../assets/epub/' . time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $bookFileName);
+    $relativePath = 'assets/epub/' . time() . '_' . preg_replace('/[^A-Za-z0-9_.-]/', '_', $bookFileName);
+    $bookPath = '../' . $relativePath; // Path for uploading.
     if (!move_uploaded_file($bookFile['tmp_name'], $bookPath)) {
-      http_response_code(500);
-      echo json_encode(['error' => 'Failed to save book file']);
-      exit;
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to save book file']);
+        exit;
     }
 
     // Handle cover file
@@ -54,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $coverFileName = basename($coverFile['name']);
     $coverBlob = file_get_contents($coverFile['tmp_name']);
 
-    // Insert book
+    // Insert book without relative path.
     $stmt = $conn->prepare("INSERT INTO books (title, writer, file_mime_type, file_path, cover_file_name, cover_mime_type, cover) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $null = NULL;
-    $stmt->bind_param("ssssssb", $title, $writer, $bookMime, $bookPath, $coverFileName, $coverMime, $null);
+    $stmt->bind_param("ssssssb", $title, $writer, $bookMime, $relativePath, $coverFileName, $coverMime, $null);
     $stmt->send_long_data(6, $coverBlob);
     
     if ($stmt->execute()) {

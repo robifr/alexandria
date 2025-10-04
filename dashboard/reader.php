@@ -94,15 +94,18 @@ if (isset($_GET['epub'])) {
 
   $stmt->bind_result($path, $mime);
   $stmt->fetch();
-  if (!file_exists($path)) {
+  
+  $fullPath = '../' . $path;
+  if (!file_exists($fullPath)) {
     http_response_code(404);
-    die("File not found at: " . $path);
+    error_log("File not found at: " . $fullPath);
+    die("File not found at: " . $fullPath);
   }
 
   // Set proper headers
   header("Content-Type: $mime");
-  header("Content-Length: " . filesize($path));
-  readfile($path);
+  header("Content-Length: " . filesize($fullPath));
+  readfile($fullPath);
   exit;
 }
 
