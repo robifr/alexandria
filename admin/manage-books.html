@@ -36,6 +36,10 @@
     /* Slider. */
     input[type="range"]::-webkit-slider-thumb {-webkit-appearance:none;height:16px;width:16px;border-radius:50%;background:#666;cursor:pointer;}
     input[type="range"]::-moz-range-thumb {height:16px;width:16px;border-radius:50%;background:#d4c7b0;cursor:pointer;}
+    
+    /* Edit mode styles. */
+    .edit-mode .action-buttons {display:flex;gap:4px;justify-content:center;}
+    .edit-mode .action-buttons button {padding:4px 8px;border:none;border-radius:6px;cursor:pointer;color:#fff;}
   </style>
 </head>
 <body>
@@ -91,20 +95,24 @@
 
         <div style="display:flex;align-items:center;gap:12px;">
           <label for="book-file" style="width:120px;font-weight:600;color:#333;">EPUB File:</label>
-          <input type="file" id="book-file" accept=".epub,.cbz" required
+          <input type="file" id="book-file" accept=".epub,.cbz"
             style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;background:#fbf8f0;">
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
           <label for="book-cover" style="width:120px;font-weight:600;color:#333;">Cover File:</label>
-          <input type="file" id="book-cover" accept=".jpg" required
+          <input type="file" id="book-cover" accept=".jpg"
             style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;background:#fbf8f0;">
         </div>
 
         <div style="text-align:right;margin-top:12px;">
-          <button type="submit" 
+          <button type="submit" id="submit-book-button"
             style="padding:10px 20px;background:#333;color:#fff;border:none;border-radius:6px;cursor:pointer;">
             Add Book
+          </button>
+          <button type="button" id="cancel-edit-book" style="padding:10px 20px;border:1px solid #333;background:transparent;color:#333;border-radius:6px;cursor:pointer;display:none;"
+            onclick="resetBookForm();">
+            Cancel
           </button>
         </div>
       </form>
@@ -123,7 +131,7 @@
             <th style="padding:10px;background:#dbd7c1;text-align:left;">Title</th>
             <th style="padding:10px;background:#dbd7c1;text-align:left;">Author</th>
             <th style="padding:10px;background:#dbd7c1;text-align:left;">Category</th>
-            <th style="padding:10px;background:#dbd7c1;text-align:center;width:100px;">Action</th>
+            <th style="padding:10px;background:#dbd7c1;text-align:center;width:120px;">Action</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -253,6 +261,7 @@
     }
 
     let allBooks = [];
+    let editingBookId = null;
 
     // Fetch books and categories.
     function loadData() {
@@ -301,15 +310,55 @@
           <td style="padding:8px;">${book.title}</td>
           <td style="padding:8px;">${book.writer}</td>
           <td style="padding:8px;">${book.categories.join(', ')}</td>
-          <td style="text-align:center;padding:8px;">
+          <td style="text-align:center;padding:8px;" class="action-buttons">
+            <button onclick='editBook(${book.id}, ${JSON.stringify(book.title)}, ${JSON.stringify(book.writer)}, ${JSON.stringify(book.categoryIds)})'
+              style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#f0c420;color:#444;">
+              Edit
+            </button>
             <button onclick='deleteBook(${book.id}, ${JSON.stringify(book.title)})'
-              style="padding:4px 8px;background:#c0392b;color:#fff;border:none;border-radius:6px;cursor:pointer;">
+              style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;background:#c0392b;color:#fff;">
               Delete
             </button>
           </td>
         `;
         tbody.appendChild(row);
       });
+    }
+
+    // Edit book by populating form and change to edit mode.
+    function editBook(id, title, writer, categoryIds) {
+      editingBookId = id;
+      document.getElementById('book-title').value = title;
+      document.getElementById('book-writer').value = writer;
+      
+      // Clear all checkboxes first
+      document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      
+      // Check the categories that this book belongs to
+      if (categoryIds && categoryIds.length) {
+        categoryIds.forEach(catId => {
+          const checkbox = document.querySelector(`.category-checkbox[value="${catId}"]`);
+          if (checkbox) {
+            checkbox.checked = true;
+          }
+        });
+      }
+      
+      document.getElementById('submit-book-button').textContent = 'Save';
+      document.getElementById('cancel-edit-book').style.display = 'inline-block';
+      
+      // Scroll to form
+      document.getElementById('add-book-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Reset form to add mode.
+    function resetBookForm() {
+      editingBookId = null;
+      document.getElementById('add-book-form').reset();
+      document.getElementById('submit-book-button').textContent = 'Add Book';
+      document.getElementById('cancel-edit-book').style.display = 'none';
     }
 
     // Delete book.
@@ -366,8 +415,20 @@
       formData.append('title', document.getElementById('book-title').value);
       formData.append('writer', document.getElementById('book-writer').value);
       formData.append('categories', JSON.stringify(selectedCategories));
-      formData.append('book_file', document.getElementById('book-file').files[0]);
-      formData.append('cover_file', document.getElementById('book-cover').files[0]);
+      
+      if (document.getElementById('book-file').files[0]) {
+        formData.append('book_file', document.getElementById('book-file').files[0]);
+      }
+      
+      if (document.getElementById('book-cover').files[0]) {
+        formData.append('cover_file', document.getElementById('book-cover').files[0]);
+      }
+      
+      // If editing, add the book ID.
+      if (editingBookId) {
+        formData.append('id', editingBookId);
+        formData.append('action', 'update');
+      }
       
       // Send request.
       fetch('manage-books.php', { 
@@ -377,7 +438,7 @@
       .then(res => res.json())
       .then(data => {
         loadData();
-        document.getElementById('add-book-form').reset();
+        resetBookForm();
       });
     });
 
