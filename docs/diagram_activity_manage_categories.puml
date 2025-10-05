@@ -1,0 +1,42 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|Admin|
+start
+:Login sebagai admin;
+:Akses tab "Manage Categories";
+
+|Sistem|
+:Tampilkan daftar kategori dengan
+tombol aksi untuk menambah,
+mengedit, dan menghapus kategori;
+
+split
+  |Admin|
+  :Mengedit kategori;
+  :Klik "Edit" pada kategori;
+  :Ubah nama kategori;
+
+  |Sistem|
+  :Perbarui nama kategori di database;
+split again
+  |Admin|
+  :Menambah kategori;
+  :Isi nama kategori dan klik "Add";
+
+  |Sistem|
+  :Simpan kategori di database;
+split again
+  |Admin|
+  :Menghapus kategori;
+  :Klik "Delete" pada kategori;
+  :Konfirmasi penghapusan;
+
+  |Sistem|
+  if (Konfirmasi kategori dihapus?) then (ya)
+    :Hapus data dari database;
+  endif
+end split
+stop
+@enduml

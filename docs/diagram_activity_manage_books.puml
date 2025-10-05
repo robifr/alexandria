@@ -1,0 +1,55 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|Admin|
+start
+:Login sebagai admin;
+:Akses tab "Manage Books";
+
+|Sistem|
+:Tampilkan daftar buku dengan
+tombol aksi untuk menambah,
+mengedit, dan menghapus buku;
+
+split
+  |Admin|
+  :Menghapus buku;
+  :Klik "Delete" pada buku;
+  :Konfirmasi penghapusan;
+
+  |Sistem|
+  if (Konfirmasi buku dihapus?) then (ya)
+    :Hapus data dari database;
+    :Hapus file ePUB dari server;
+  endif
+split again
+  |Admin|
+  :Mengedit buku;
+  :Klik "Edit" pada buku;
+  :Ubah data;
+
+  |Sistem|
+  :Validasi input dan file;
+  if (Validasi berhasil?) then (ya)
+    :Perbarui metadata di database;
+    :Upload file ePUB ke server (jika ada);
+  else (tidak)
+    :Tampilkan pesan error;
+  endif
+split again
+  |Admin|
+  :Menambah buku;
+  :Isi form dan klik "Add";
+
+  |Sistem|
+  :Validasi input dan file;
+  if (Validasi berhasil?) then (ya)
+    :Simpan metadata ke database;
+    :Upload file ePUB ke server;
+  else (tidak)
+    :Tampilkan pesan error;
+  endif
+end split
+stop
+@enduml

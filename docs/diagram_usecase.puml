@@ -1,0 +1,31 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor :User: as User #white
+actor :Admin: as Admin #white
+
+rectangle "Sistem E-Book Online" {
+    User --- (Register)
+    User --- (Login & Logout)
+    User --- (Browse Katalog Buku)
+    User --- (Mencari Buku)
+    User --- (Membaca Buku)
+    User --- (Menambahkan Buku ke Bookmark)
+    User --- (Menyimpan Progress Baca)
+    User --- (Menyimpan Histori Baca)
+
+    (Mengelola Buku) --- Admin
+    (Mengelola Kategori) --- Admin
+    (Login & Logout) --- Admin
+    (Browse Katalog Buku) --- Admin
+    (Mencari Buku) --- Admin
+    (Membaca Buku) --- Admin
+    (Menambahkan Buku ke Bookmark) --- Admin
+    (Menyimpan Progress Baca) --- Admin
+    (Menyimpan Histori Baca) --- Admin
+}
+@enduml

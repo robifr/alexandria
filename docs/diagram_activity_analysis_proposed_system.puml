@@ -1,0 +1,44 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+start
+:User butuh buku;
+:Akses website;
+if (Sudah ada akun?) then (ya)
+else (tidak)
+  :Registrasi akun baru;
+endif
+:Login;
+
+:Cari buku / pilih kategori;
+if (Hasil ditemukan?) then (ya)
+  :Akses buku;
+  note right
+    Fitur:
+    - Progress bar terlihat
+    - Langsung ke halaman terakhir dibaca
+    - Bookmark tersimpan
+  end note
+  :Baca buku secara online;
+  note right
+    Benefit:
+    - Progress tracking real-time
+    - Tercatat langsung di riwayat
+    - Bookmark digital
+  end note
+else (tidak)
+  :Tampilkan laman kosong;
+endif
+if (Ingin cek riwayat / progress?) then (ya)
+    :Akses laman history;
+    note left
+      Benefit:
+      - Akses mandiri
+      - Riwayat digital
+      - Privasi terjaga
+    end note
+else (tidak)
+endif
+stop
+@enduml

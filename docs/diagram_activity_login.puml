@@ -1,0 +1,25 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|User/Admin|
+start
+:Akses laman login;
+:Masukkan username dan password;
+:Klik tombol login;
+
+|Sistem|
+:Validasi kredensial;
+if (Krediensial valid?) then (ya)
+  if (Role user adalah admin?) then (ya)
+    :Menampikan laman utama dengan tab ekstra
+    untuk mengelola buku dan kategori;
+  else (tidak)
+    :Menampikan laman utama;
+  endif
+  :Atur user session;
+else (tidak)
+  :Tampilkan pesan error;
+endif
+stop
+@enduml

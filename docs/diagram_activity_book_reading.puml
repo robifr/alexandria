@@ -1,0 +1,35 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|User|
+start
+:Login;
+:Buka tab "Books";
+
+|Sistem|
+:Tampilkan daftar buku;
+
+|User|
+:Klik buku;
+
+|Sistem|
+:Render ePUB;
+:Lompat ke halaman terakhir dibaca;
+
+|User|
+repeat
+  :Navigasi halaman/chapter;
+  
+  |Sistem|
+  :Auto-save progress;
+  
+  |User|
+repeat while (Lanjut membaca?)
+->tidak;
+:Kembali ke laman sebelumnya;
+
+|Sistem|
+:Simpan ke progres baca ke database;
+stop
+@enduml

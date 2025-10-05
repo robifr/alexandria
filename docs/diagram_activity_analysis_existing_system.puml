@@ -1,0 +1,56 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+start
+:User membutuhkan buku;
+:Pergi ke perpustakaan\natau toko buku terdekat;
+note right
+  Painpoint:
+  - Akses terbatas (lokasi & jam buka)
+  - Waktu & biaya perjalanan
+end note
+
+:Tanya ketersediaan\nke petugas / cek rak;
+if (Buku tersedia?) then (ya)
+  :Pilih opsi\n(baca di tempat / pinjam / beli);
+  note right
+    Painpoint:
+    - Tidak ada pencatatan digital
+    - Tidak ada riwayat baca/progres
+    - Tidak ada bookmark digital
+  end note
+  if (Baca di tempat?) then (ya)
+    :Baca langsung di tempat;
+  else (tidak)
+    :Pinjam atau beli buku cetak;
+    :Proses administrasi
+    (isi formulir peminjaman / bayar di kasir);
+    :User membaca buku fisik;
+  endif
+
+else (tidak)
+  :Cari alternatif\n(toko lain / pesan online);
+  note right
+    Painpoint:
+    - Delay pengiriman
+    - Biaya tambahan
+    - Ketidakpastian ketersediaan
+  end note
+  :Menunggu proses pengiriman;
+  :User membaca setelah\nbuku diterima;
+endif
+
+if (Ingin cek riwayat peminjaman / progress?) then (ya)
+  :Tanya petugas untuk riwayat;
+  note left
+  Painpoint:
+    - Harus mengandalkan petugas
+    - Catatan mudah hilang/rusak
+    - Kurang privasi
+    - Tidak bisa akses mandiri
+  end note
+else (tidak)
+endif
+stop
+@enduml

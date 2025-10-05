@@ -1,0 +1,23 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|User|
+start
+:Akses laman register;
+:Isi form registrasi
+(username, password);
+:Klik tombol sign up;
+
+|Sistem|
+:Validasi data form;
+if (Data valid?) then (ya)
+  :Buat akun user baru;
+  :Simpan ke database;
+  :Tampilkan pesan sukses;
+  :Arahkan ke laman login;
+else (tidak)
+  :Tampilkan pesan error;
+endif
+stop
+@enduml

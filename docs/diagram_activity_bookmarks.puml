@@ -1,0 +1,35 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|User|
+start
+:Buka buku;
+:Klik ikon bintang di sidebar;
+
+|Sistem|
+if (Status belum di-bookmark?) then (ya)
+  :Tambahkan ke bookmark;
+  :Perbarui ikon jadi terisi;
+else (tidak)
+  :Hapus dari bookmark;
+  :Perbarui ikon jadi kosong;
+endif
+:Update database;
+
+|User|
+:Klik tombol back;
+:Akses tab "Bookmarks";
+
+|Sistem|
+:Query buku yang di-bookmark user;
+:Tampilkan di laman bookmarks;
+
+|User|
+:Klik buku dari daftar bookmark;
+
+|Sistem|
+:Redirect ke laman baca buku
+dengan buku yang dipilih;
+stop
+@enduml

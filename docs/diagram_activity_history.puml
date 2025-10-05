@@ -1,0 +1,27 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+|User|
+start
+:User selesai membaca buku;
+
+|Sistem|
+:Simpan progres baca ke database;
+
+|User|
+:Buka tab "History";
+
+|Sistem|
+:Query riwayat baca user dari database;
+:Tampilkan buku diurutkan berdasarkan
+waktu akses terakhir;
+
+|User|
+:Klik buku dari daftar history;
+
+|Sistem|
+:Redirect ke laman baca buku
+dengan progres terakhir;
+stop
+@enduml
