@@ -3,6 +3,8 @@ session_start();
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+include __DIR__ . '/../db.php';
+
 if (empty($_SESSION['user_id'])) {
   http_response_code(401);
   echo json_encode(['error' => 'Not authenticated']);
@@ -11,8 +13,6 @@ if (empty($_SESSION['user_id'])) {
 $user_id = (int)$_SESSION['user_id'];
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
-
-include '../db.php';
 
 // Serve logout.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
