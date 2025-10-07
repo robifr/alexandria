@@ -16,7 +16,7 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
   // Username already taken.
   echo "<script>window.location.href='auth.html?error=signup';</script>";
-  exit();
+  return;
 }
 
 // Hash the password before saving it.
