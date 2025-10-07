@@ -10,6 +10,7 @@ if (empty($_SESSION['user_id'])) {
 }
 $user_id = (int)$_SESSION['user_id'];
 $username = $_SESSION['username'];
+$role = $_SESSION['role'];
 
 include '../db.php';
 
@@ -29,7 +30,8 @@ if (isset($_GET['user'])) {
   header('Content-Type: application/json');
   echo json_encode([
     'id' => $user_id,
-    'username' => $username
+    'username' => $username,
+    'role' => $role
   ]);
   exit;
 }

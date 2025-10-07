@@ -53,8 +53,8 @@
       <div class="nav-item selected">Books</div>
       <div class="nav-item">Bookmarks</div>
       <div class="nav-item">History</div>
-      <div class="nav-item">Manage Books</div>
-      <div class="nav-item">Manage Categories</div>
+      <div class="nav-item admin-only" style="display:none;">Manage Books</div>
+      <div class="nav-item admin-only" style="display:none;">Manage Categories</div>
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
@@ -63,11 +63,7 @@
         <img src="../assets/icon/mic.svg" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
       </div>
       <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
-        onclick="
-          fetch('books.php?user=1')
-            .then(res => res.json())
-            .then(data => document.getElementById('username').textContent = data.username);
-          document.getElementById('settings-dialog').showModal();">
+        onclick="document.getElementById('settings-dialog').showModal();">
     </div>
   </div>
 
@@ -222,6 +218,16 @@
         renderBooks(filtered);
       }
     }
+
+    // Show book and category management for those with role of admin.
+    fetch('books.php?user=1')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('username').textContent = data.username;
+        if (data.role === 'admin') {
+          document.querySelectorAll('.admin-only').forEach(item => item.style.display = 'block');
+        }
+      });
 
     // Fetch all books on initial load.
     fetch('books.php')
