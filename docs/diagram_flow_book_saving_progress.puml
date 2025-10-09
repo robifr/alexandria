@@ -1,0 +1,33 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+start
+:1. Akses halaman baca buku
+dengan buku yang dipilih;
+:2. Ambil metadata buku
+dan progress terakhir;
+if (3. Ada progress sebelumnya?) then (ya)
+  :4. Buka di posisi
+  terakhir dibaca;
+else (tidak)
+  :5. Buka di halaman pertama;
+endif
+:6. Render konten buku;
+while (7. Sedang membaca?) is (ya)
+  if (8. Berpindah halaman?) then (ya)
+    :9. Dapatkan data posisi:
+    - Halaman saat ini
+    - Total halaman
+    - Posisi CFI;
+    :10. Update progres ke server;
+  endif
+  :11. Update antarmuka:
+  - Highlight chapter aktif
+  - Tampilan judul chapter
+  - Tampilan nomor halaman;
+endwhile
+:12. Keluar dari halaman baca buku;
+:13. Simpan progres ke server;
+stop
+@enduml

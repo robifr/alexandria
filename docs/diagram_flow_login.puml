@@ -1,0 +1,25 @@
+' https://www.plantuml.com/plantuml/uml/
+' https://www.planttext.com/
+
+@startuml
+start
+:1. Buka modal login;
+:2. Terima input username
+dan password dari form;
+:3. Query database untuk
+mencari user;
+if (4. User ditemukan?) then (ya)
+  :5. Verifikasi password;
+  if (6. Password valid?) then (ya)
+    :7. Set session user;
+    :8. Redirect ke halaman katalog buku;
+  else (tidak)
+    :9. Redirect ke halaman auth
+    dengan pesan error;
+  endif
+else (tidak)
+  :10. Redirect ke halaman auth
+  dengan pesan error;
+endif
+stop
+@enduml
