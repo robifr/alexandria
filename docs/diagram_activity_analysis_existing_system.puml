@@ -16,7 +16,6 @@ if (Buku tersedia?) then (ya)
   :Pilih opsi\n(baca di tempat / pinjam / beli);
   note right
     Painpoint:
-    - Tidak ada pencatatan digital
     - Tidak ada riwayat baca/progres
     - Tidak ada bookmark digital
   end note
@@ -24,6 +23,11 @@ if (Buku tersedia?) then (ya)
     :Baca langsung di tempat;
   else (tidak)
     :Pinjam atau beli buku cetak;
+    note right
+      Painpoint:
+      - Tenggat waktu peminjaman
+      (denda)
+    end note
     :Proses administrasi
     (isi formulir peminjaman / bayar di kasir);
     :User membaca buku fisik;
@@ -35,6 +39,7 @@ else (tidak)
     Painpoint:
     - Delay pengiriman
     - Biaya tambahan
+    - Resiko rusak saat sampai
     - Ketidakpastian ketersediaan
   end note
   :Menunggu proses pengiriman;

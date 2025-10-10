@@ -12,13 +12,16 @@ endif
 :Login;
 
 :Cari buku / pilih kategori;
+note right
+  Benefit:
+  - Pencarian cepat
+end note
 if (Hasil ditemukan?) then (ya)
   :Akses buku;
   note right
-    Fitur:
+    Benefit:
     - Progress bar terlihat
     - Langsung ke halaman terakhir dibaca
-    - Bookmark tersimpan
   end note
   :Baca buku secara online;
   note right
@@ -35,7 +38,6 @@ if (Ingin cek riwayat / progress?) then (ya)
     note left
       Benefit:
       - Akses mandiri
-      - Riwayat digital
       - Privasi terjaga
     end note
 else (tidak)
