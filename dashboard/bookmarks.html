@@ -175,7 +175,11 @@
               })
               .then(res => res.json())
               .then(data => {
-                if (data.success) window.location.href = '../auth/auth.html';
+                if (data.success) {
+                  sessionStorage.removeItem('role');
+                  sessionStorage.removeItem('username');
+                  window.location.href = '../auth/auth.html';
+                }
               });"
             style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;text-align:center;">
             Logout
@@ -246,14 +250,29 @@
     }
 
     // Show book and category management for those with role of admin.
-    fetch('bookmarks.php?user=1')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('username').textContent = data.username;
-        if (data.role === 'admin') {
+    function loadUserRole() {
+      var role = sessionStorage.getItem('role');
+      var username = sessionStorage.getItem('username');
+
+      if (role && username) {
+        document.getElementById('username').textContent = username;
+        if (role === 'admin') {
           document.querySelectorAll('.admin-only').forEach(item => item.style.display = 'block');
         }
-      });
+      } else {
+        fetch('bookmarks.php?user=1')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('username').textContent = data.username;
+            sessionStorage.setItem('role', data.role);
+            sessionStorage.setItem('username', data.username);
+            if (data.role === 'admin') {
+              document.querySelectorAll('.admin-only').forEach(item => item.style.display = 'block');
+            }
+          });
+      }
+    }
+    loadUserRole();
 
     // Fetch all books on initial load.
     fetch('bookmarks.php')

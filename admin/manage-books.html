@@ -272,7 +272,11 @@
               })
               .then(res => res.json())
               .then(data => {
-                if (data.success) window.location.href = '../auth/auth.html';
+                if (data.success) {
+                  sessionStorage.removeItem('role');
+                  sessionStorage.removeItem('username');
+                  window.location.href = '../auth/auth.html';
+                }
               });"
             style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;text-align:center;">
             Logout
