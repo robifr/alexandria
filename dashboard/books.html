@@ -7,6 +7,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
     body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+    body.dark, body.dark p, body.dark span, body.dark h1, body.dark .nav-item, body.dark .filter-btn, body.dark .card-title, body.dark input[type="text"], body.dark .filter-menu div {color:#e8dfc8;}
+    body.dark {background:#2a2618;}
+    body.dark .invertible-icon {filter:invert(1) brightness(1.5) sepia(0.3) hue-rotate(5deg);}
+
+    body.dark .nav-item:hover, body.dark .nav-item.selected, body.dark .filter-btn.active {border-bottom-color:#d4c7a0;}
+    body.dark .filter-menu, body.dark .card:hover, body.dark input[type="text"] {background:#3a3525;}
+    body.dark .filter-menu div:hover {background:#4a4535;}
+    body.dark .filter-menu div.active, body.dark .progress-bar-container {background:#5a5540;}
+
+    body.dark .card-writer {color:#b8af95;}
+    body.dark .progress-bar-fill {background:#d4c7a0;}
+
+    body.dark #settings-dialog {background:#3a3525;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
+    body.dark #settings-dialog h2, body.dark #settings-dialog h3, body.dark #settings-dialog span {color:#e8dfc8;}
+    body.dark #settings-dialog input[type="range"] {background:#5a5540;}
+    body.dark #settings-dialog .switch .slider {background:#5a5540;}
+    body.dark #settings-dialog .switch input:checked + .slider {background:#d4c7a0;}
+    body.dark #settings-dialog .switch .slider:before {background:#e8dfc8;}
+    body.dark #settings-dialog input[type="range"]::-webkit-slider-thumb, body.dark #settings-dialog input[type="range"]::-moz-range-thumb {background:#d4c7a0;}
+    body.dark #settings-dialog button[title="Close"] {color:#e8dfc8;}
+    body.dark #settings-dialog #logout-btn {background:#efede4;color:#000;}
+    body.dark #settings-dialog #logout-btn:hover {background:#dbd7c1}
+    body.dark #settings-scroll-area {background:#3a3525}
+
     .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
     .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
     .filter-btn {display:flex;align-items:center;gap:8px;cursor:pointer;color:#333;border:none;border-bottom:2px solid transparent;background:transparent;font-family:'Roboto Slab',serif;font-size:1rem;position:relative;padding:6px 0;}
@@ -39,7 +64,8 @@
     .switch .slider:before {content:"";position:absolute;height:16px;width:16px;left:2px;bottom:2px;border-radius:50%;background:#999;transition:.2s;}
     .switch input:checked + .slider {background:#d4c7b0;}
     .switch input:checked + .slider:before {transform:translateX(20px);background:#666;}
-    #logout-btn:hover {background:#555 !important;}
+    #logout-btn {background:#333;color:#fff}
+    #logout-btn:hover {background:#555;}
     /* Slider. */
     input[type="range"]::-webkit-slider-thumb {-webkit-appearance:none;height:16px;width:16px;border-radius:50%;background:#666;cursor:pointer;}
     input[type="range"]::-moz-range-thumb {height:16px;width:16px;border-radius:50%;background:#d4c7b0;cursor:pointer;}
@@ -48,7 +74,7 @@
 <body>
 
   <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;">
-    <h1 style="margin:0;font-size:1.8rem;color:#333;">Alexandria</h1>
+    <h1 style="margin:0;font-size:1.8rem;">Alexandria</h1>
     <div style="flex:1;display:flex;justify-content:center;gap:24px;">
       <div class="nav-item selected">Books</div>
       <div class="nav-item">Bookmarks</div>
@@ -58,11 +84,11 @@
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
-        <img src="../assets/icon/search.svg" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
+        <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
         <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
-        <img src="../assets/icon/mic.svg" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
+        <img src="../assets/icon/mic.svg" class="invertible-icon" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
       </div>
-      <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
+      <img id="settings-icon" class="invertible-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
         onclick="document.getElementById('settings-dialog').showModal();">
     </div>
   </div>
@@ -71,7 +97,7 @@
     <div style="position:relative;">
       <button class="filter-btn">
         Category
-        <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" style="width:20px;height:20px;">
+        <img id="icon-category" class="invertible-icon" src="../assets/icon/arrow_drop_down.svg" style="width:20px;height:20px;">
       </button>
       <div id="menu-category" class="filter-menu"></div>
     </div>
@@ -87,14 +113,14 @@
 
     <!-- Scrollable area. -->
     <div id="settings-scroll-area" style="overflow-y:auto;max-height:calc(80vh - 56px);padding:28px;">
-      <h2 style="font-size:1.75rem;margin:0 0 24px 0;color:#333;">Settings</h2>
+      <h2 style="font-size:1.75rem;margin:0 0 24px 0;">Settings</h2>
 
       <h3 style="font-size:1rem;margin-bottom:24px;">Preference</h3>
       <!-- Dark theme. -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <img src="../assets/icon/dark_mode.svg" style="width:24px;height:24px;">
-          <span style="font-size:1rem;color:#333;">Enable dark theme</span>
+          <img src="../assets/icon/dark_mode.svg" class="invertible-icon" style="width:24px;height:24px;">
+          <span style="font-size:1rem;">Enable dark theme</span>
         </div>
         <label class="switch">
           <input type="checkbox" onchange="document.body.classList.toggle('dark')">
@@ -105,7 +131,7 @@
       <div style="margin-bottom:32px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <img src="../assets/icon/format_size.svg" style="width:24px;height:24px;">
+            <img src="../assets/icon/format_size.svg" class="invertible-icon" style="width:24px;height:24px;">
             <span style="font-size:1rem;">Font size</span>
           </div>
           <span id="font-size-value" style="font-size:1rem;">16px</span>
@@ -121,7 +147,7 @@
       <div style="margin-bottom:32px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <img src="../assets/icon/format_line_spacing.svg" style="width:24px;height:24px;">
+            <img src="../assets/icon/format_line_spacing.svg" class="invertible-icon" style="width:24px;height:24px;">
             <span style="font-size:1rem;">Line spacing</span>
           </div>
           <span id="line-spacing-value" style="font-size:1rem;">1.5</span>
@@ -137,7 +163,7 @@
       <!-- Account. -->
       <h3 style="font-size:1rem;margin-bottom:16px;">Account</h3>
       <div style="display:flex;align-items:flex-start;gap:12px;">
-        <img src="../assets/icon/account.svg" style="width:54px;height:54px;margin-top:4px;">
+        <img src="../assets/icon/account.svg" class="invertible-icon" style="width:54px;height:54px;margin-top:4px;">
         <div style="display:flex;flex-direction:column;gap:8px;">
           <span id="username" style="font-size:1rem;"></span>
           <button id="logout-btn"
@@ -151,7 +177,7 @@
               .then(data => {
                 if (data.success) window.location.href = '../auth/auth.html';
               });"
-            style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;background:#333;color:#fff;text-align:center;">
+            style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;text-align:center;">
             Logout
           </button>
         </div>
@@ -312,6 +338,68 @@
         document.querySelectorAll('.filter-menu').forEach(m => m.style.display = 'none');
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.filter-btn img').forEach(i => i.src = '../assets/icon/arrow_drop_down.svg');
+      }
+    });
+
+    // Settings functionality.
+    function loadSettings() {
+      const darkTheme = localStorage.getItem('darkTheme') === 'true';
+      const fontSize = localStorage.getItem('fontSize') || '16';
+      const lineSpacing = localStorage.getItem('lineSpacing') || '1.5';
+      
+      // Apply settings.
+      document.body.classList.toggle('dark', darkTheme);
+      document.body.style.fontSize = fontSize + 'px';
+      document.body.style.lineHeight = lineSpacing;
+      
+      // Update UI controls.
+      const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
+      const fontSizeSlider = document.querySelector('#settings-dialog input[type="range"][min="12"][max="24"]');
+      const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
+      
+      if (darkToggle) darkToggle.checked = darkTheme;
+      if (fontSizeSlider) {
+        fontSizeSlider.value = fontSize;
+        document.getElementById('font-size-value').textContent = fontSize + 'px';
+      }
+      if (lineSpacingSlider) {
+        lineSpacingSlider.value = lineSpacing;
+        document.getElementById('line-spacing-value').textContent = lineSpacing;
+      }
+    }
+
+    // Event listeners for settings.
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+      
+      // Dark theme toggle.
+      const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
+      if (darkToggle) {
+        darkToggle.addEventListener('change', (e) => {
+          document.body.classList.toggle('dark', e.target.checked);
+          localStorage.setItem('darkTheme', e.target.checked);
+        });
+      }
+      
+      // Font size slider.
+      const fontSizeSlider = document.querySelector('#settings-dialog input[type="range"][min="12"][max="24"]');
+      if (fontSizeSlider) {
+        fontSizeSlider.addEventListener('input', (e) => {
+          const size = e.target.value + 'px';
+          document.body.style.fontSize = size;
+          document.getElementById('font-size-value').textContent = size;
+          localStorage.setItem('fontSize', e.target.value);
+        });
+      }
+      
+      // Line spacing slider.
+      const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
+      if (lineSpacingSlider) {
+        lineSpacingSlider.addEventListener('input', (e) => {
+          document.body.style.lineHeight = e.target.value;
+          document.getElementById('line-spacing-value').textContent = e.target.value;
+          localStorage.setItem('lineSpacing', e.target.value);
+        });
       }
     });
   </script>

@@ -7,17 +7,64 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
     body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+    body.dark, body.dark p, body.dark span, body.dark h1, body.dark .nav-item, body.dark input[type="text"] {color:#e8dfc8;}
+    body.dark {background:#2a2618;}
+    body.dark .invertible-icon {filter:invert(1) brightness(1.5) sepia(0.3) hue-rotate(5deg);}
+
+    body.dark .nav-item:hover, body.dark .nav-item.selected {border-bottom-color:#d4c7a0;}
+
+    body.dark #add-book-form #book-title, body.dark #add-book-form #book-writer {background:#4a4535;}
+    body.dark #add-book-form .category-checkbox:checked + .category-label {background:#5a5540;}
+    body.dark #add-book-form .category-checkbox:checked + .category-label::after {filter:invert(1) brightness(1.5) sepia(0.3) hue-rotate(5deg);}
+    body.dark #add-book-form #submit-book-button, body.dark #add-book-form #cancel-edit-book-button {color:#fff;border:1px solid #d4c7a0;}
+    body.dark #add-book-form #submit-book-button {background:#d4c7a0;color:#000;}
+
+    body.dark #search-books, body.dark #books {background:#3a3525;}
+    body.dark #books .books-table-header {background:#636157;}
+
+    body.dark #confirm-delete-dialog{background:rgba(0,0,0,0.35);}
+    body.dark #confirm-delete-dialog .container{background:#3a3525;color:#e8dfc8;}
+    body.dark #confirm-delete-dialog #cancel-delete-btn{background:#efede4;color:#000;}
+    body.dark #confirm-delete-dialog #cancel-delete-btn:hover{background:#dbd7c1;color:#000;}
+    body.dark #confirm-delete-dialog #confirm-delete-btn{background:#d4c7a0;color:#000;}
+    body.dark #confirm-delete-dialog #confirm-delete-btn:hover{background:#bfae82;color:#000;}
+
+    body.dark #settings-dialog {background:#3a3525;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
+    body.dark #settings-dialog h2, body.dark #settings-dialog h3, body.dark #settings-dialog span {color:#e8dfc8;}
+    body.dark #settings-dialog input[type="range"] {background:#5a5540;}
+    body.dark #settings-dialog .switch .slider {background:#5a5540;}
+    body.dark #settings-dialog .switch input:checked + .slider {background:#d4c7a0;}
+    body.dark #settings-dialog .switch .slider:before {background:#e8dfc8;}
+    body.dark #settings-dialog input[type="range"]::-webkit-slider-thumb, body.dark #settings-dialog input[type="range"]::-moz-range-thumb {background:#d4c7a0;}
+    body.dark #settings-dialog button[title="Close"] {color:#e8dfc8;}
+    body.dark #settings-dialog #logout-btn {background:#efede4;color:#000;}
+    body.dark #settings-dialog #logout-btn:hover {background:#dbd7c1}
+    body.dark #settings-scroll-area {background:#3a3525}
+
     .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
     .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
 
+    #add-book-form #book-title, #add-book-form #book-writer {background:#fbf8f0;}
     /* Category checkboxes. */
-    .category-checkboxes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-    .category-checkbox { display: none; }
-    .category-label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background-color: none; border-radius: 16px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; border: 1px solid #c9c4ad; position: relative; }
-    .category-checkbox:checked + .category-label { background-color: #d4c7b0; border-color: #999; padding-right: 30px; }
-    .category-checkbox:checked + .category-label::after { content: ""; display: inline-block; width: 16px; height: 16px; background-image: url('../assets/icon/check.svg'); background-size: contain; background-repeat: no-repeat; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); }
+    #add-book-form .category-checkboxes {display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;}
+    #add-book-form .category-checkbox {display:none;}
+    #add-book-form .category-label {display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background-color:none;border-radius:16px;cursor:pointer;font-size:0.9rem;transition:all 0.2s;border:1px solid #c9c4ad;position:relative;}
+    #add-book-form .category-checkbox:checked + .category-label {background-color:#d4c7b0;border-color:#999;padding-right:30px;}
+    #add-book-form .category-checkbox:checked + .category-label::after {content:"";display:inline-block;width:16px;height:16px;background-image:url('../assets/icon/check.svg');background-size:contain;background-repeat:no-repeat;position:absolute;right:8px;top:50%;transform:translateY(-50%);}
+    #add-book-form #submit-book-button {background:#333;color:#fff;}
+    #add-book-form #cancel-edit-book-button {color:#000;border:1px solid #333;}
 
-    .book-cover { width: 60px; height: 80px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    #search-books, #books {background:#f7f1df;}
+    #books .books-table-header {background:#dbd7c1;}
+    #books .book-cover {width:60px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+
+    #confirm-delete-dialog{background:rgba(0,0,0,0.2);}
+    #confirm-delete-dialog .container{background:#f3ecd3;color:#333;}
+    #confirm-delete-dialog #cancel-delete-btn{background:#cfccc4;color:#333;}
+    #confirm-delete-dialog #cancel-delete-btn:hover{background:#c2c1bc;color:#333;}
+    #confirm-delete-dialog #confirm-delete-btn{background:#333;color:#fff;}
+    #confirm-delete-dialog #confirm-delete-btn:hover{background:#555;color:#fff;}
 
     ::-webkit-scrollbar {width:8px;background-color:rgba(0,0,0,0);}
     ::-webkit-scrollbar:hover {background-color:rgba(0, 0, 0, 0.09);}
@@ -32,20 +79,17 @@
     .switch .slider:before {content:"";position:absolute;height:16px;width:16px;left:2px;bottom:2px;border-radius:50%;background:#999;transition:.2s;}
     .switch input:checked + .slider {background:#d4c7b0;}
     .switch input:checked + .slider:before {transform:translateX(20px);background:#666;}
-    #logout-btn:hover {background:#555 !important;}
+    #logout-btn {background:#333;color:#fff}
+    #logout-btn:hover {background:#555;}
     /* Slider. */
     input[type="range"]::-webkit-slider-thumb {-webkit-appearance:none;height:16px;width:16px;border-radius:50%;background:#666;cursor:pointer;}
     input[type="range"]::-moz-range-thumb {height:16px;width:16px;border-radius:50%;background:#d4c7b0;cursor:pointer;}
-    
-    /* Edit mode styles. */
-    .edit-mode .action-buttons {display:flex;gap:4px;justify-content:center;}
-    .edit-mode .action-buttons button {padding:4px 8px;border:none;border-radius:6px;cursor:pointer;color:#fff;}
   </style>
 </head>
 <body>
 
   <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;">
-    <h1 style="margin:0;font-size:1.8rem;color:#333;">Alexandria</h1>
+    <h1 style="margin:0;font-size:1.8rem;">Alexandria</h1>
     <div style="flex:1;display:flex;justify-content:center;gap:24px;">
       <div class="nav-item">Books</div>
       <div class="nav-item">Bookmarks</div>
@@ -55,11 +99,11 @@
     </div>
     <div style="display:flex;align-items:center;gap:32px;">
       <div style="position:relative;">
-        <img src="../assets/icon/search.svg" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
+        <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
         <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
-        <img src="../assets/icon/mic.svg" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
+        <img src="../assets/icon/mic.svg" title="Voice-to-Text" class="invertible-icon" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
       </div>
-      <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" style="width:36px;height:36px;cursor:pointer;"
+      <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" class="invertible-icon" style="width:36px;height:36px;cursor:pointer;"
         onclick="
           fetch('manage-categories.php?user=1')
             .then(res => res.json())
@@ -71,21 +115,21 @@
   <div style="display:flex;flex-direction:column;align-items:center;width:100%;padding:20px;overflow:auto;">
     <div style="width:70%;display:flex;flex-direction:column;gap:20px;">
       <form id="add-book-form" autocomplete="off" 
-        style="display:flex;flex-direction:column;gap:12px;background:#f7f1df;padding:20px;border-radius:8px;border:1px solid #c9c4ad;width:100%;box-sizing:border-box;">
+        style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:8px;border:1px solid #c9c4ad;width:100%;box-sizing:border-box;">
         <div style="display:flex;align-items:center;gap:12px;">
-          <label for="book-title" style="width:120px;font-weight:600;color:#333;">Title:</label>
+          <label for="book-title" style="width:120px;font-weight:600;">Title:</label>
           <input type="text" id="book-title" required
-            style="flex:1;padding:10px;border:1px solid #cdc6a6;border-radius:6px;background:#fbf8f0;">
+            style="flex:1;padding:10px;border:1px solid #cdc6a6;border-radius:6px;">
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
-          <label for="book-writer" style="width:120px;font-weight:600;color:#333;">Author:</label>
+          <label for="book-writer" style="width:120px;font-weight:600;">Author:</label>
           <input type="text" id="book-writer" required
-            style="flex:1;padding:10px;border:1px solid #c9c4ad;border-radius:6px;background:#fbf8f0;">
+            style="flex:1;padding:10px;border:1px solid #c9c4ad;border-radius:6px;">
         </div>
 
         <div style="display:flex;align-items:flex-start;gap:12px;">
-          <label style="width:120px;font-weight:600;color:#333;margin-top:10px;">Categories:</label>
+          <label style="width:120px;font-weight:600;margin-top:10px;">Categories:</label>
           <div style="flex:1;">
             <div id="category-checkboxes" class="category-checkboxes">
               <!-- Categories loaded dynamically -->
@@ -94,23 +138,23 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
-          <label for="book-file" style="width:120px;font-weight:600;color:#333;">EPUB File:</label>
+          <label for="book-file" style="width:120px;font-weight:600;">EPUB File:</label>
           <input type="file" id="book-file" accept=".epub,.cbz"
-            style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;background:#fbf8f0;">
+            style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;">
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
-          <label for="book-cover" style="width:120px;font-weight:600;color:#333;">Cover File:</label>
+          <label for="book-cover" style="width:120px;font-weight:600;">Cover File:</label>
           <input type="file" id="book-cover" accept=".jpg"
-            style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;background:#fbf8f0;">
+            style="flex:1;padding:6px;border:1px solid #c9c4ad;border-radius:6px;">
         </div>
 
         <div style="text-align:right;margin-top:12px;">
           <button type="submit" id="submit-book-button"
-            style="padding:10px 20px;background:#333;color:#fff;border:none;border-radius:6px;cursor:pointer;">
+            style="padding:10px 20px;border:none;border-radius:6px;cursor:pointer;">
             Add Book
           </button>
-          <button type="button" id="cancel-edit-book" style="padding:10px 20px;border:1px solid #333;background:transparent;color:#333;border-radius:6px;cursor:pointer;display:none;"
+          <button type="button" id="cancel-edit-book-button" style="padding:10px 20px;background:transparent;border-radius:6px;cursor:pointer;display:none;"
             onclick="resetBookForm();">
             Cancel
           </button>
@@ -120,18 +164,18 @@
       <!-- Search bar. -->
       <div style="width:100%;display:flex;justify-content:flex-end;">
         <input type="text" id="search-books" placeholder="Search books…" 
-          style="flex:1;padding:10px;border:1px solid #c9c4ad;border-radius:6px;background:#f7f1df;">
+          style="flex:1;padding:10px;border:1px solid #c9c4ad;border-radius:6px;">
       </div>
 
       <!-- Book list. -->
-      <table id="books" style="width:100%;border-collapse:collapse;background:#f7f1df;border-radius:8px;overflow:hidden;border:1px solid #c9c4ad;">
+      <table id="books" style="width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;border:1px solid #c9c4ad;">
         <thead>
           <tr>
-            <th style="padding:10px;background:#dbd7c1;text-align:left;width:80px;">Cover</th>
-            <th style="padding:10px;background:#dbd7c1;text-align:left;">Title</th>
-            <th style="padding:10px;background:#dbd7c1;text-align:left;">Author</th>
-            <th style="padding:10px;background:#dbd7c1;text-align:left;">Category</th>
-            <th style="padding:10px;background:#dbd7c1;text-align:center;width:120px;">Action</th>
+            <th class="books-table-header" style="padding:10px;text-align:left;width:80px;">Cover</th>
+            <th class="books-table-header" style="padding:10px;text-align:left;">Title</th>
+            <th class="books-table-header" style="padding:10px;text-align:left;">Author</th>
+            <th class="books-table-header" style="padding:10px;text-align:left;">Category</th>
+            <th class="books-table-header" style="padding:10px;text-align:center;width:120px;">Action</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -140,18 +184,18 @@
   </div>
 
   <div id="confirm-delete-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);justify-content:center;align-items:center;z-index:1001;">
-    <div style="position:relative;background:#f3ecd3;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.2);max-width:420px;width:100%;font-family:'Roboto Slab',serif;color:#333;box-sizing:border-box;">
+    <div class="container" style="position:relative;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.2);max-width:420px;width:100%;font-family:'Roboto Slab',serif;box-sizing:border-box;">
       <div style="padding:16px 24px 60px 24px;">
         <h2 id="delete-dialog-title" style="margin:0 0 6px 0;font-size:1.1rem;font-weight:600;text-align:left;">Delete book "$book_title"?</h2>
-        <p style="margin:0;font-size:0.85rem;color:#555;line-height:1.4;text-align:left;">
+        <p style="margin:0;font-size:0.85rem;line-height:1.4;text-align:left;">
           This will permanently remove the book and all its associated data. This action cannot be undone. Are you sure want to continue?
         </p>
       </div>
       <div style="position:absolute;bottom:12px;right:12px;display:flex;gap:8px;">
-        <button id="cancel-delete-btn" style="background:#cfccc4;color:#333;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
+        <button id="cancel-delete-btn" style="border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
           Cancel
         </button>
-        <button id="confirm-delete-btn" style="background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
+        <button id="confirm-delete-btn" style="border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:400;">
           Delete
         </button>
       </div>
@@ -166,14 +210,14 @@
 
     <!-- Scrollable area. -->
     <div id="settings-scroll-area" style="overflow-y:auto;max-height:calc(80vh - 56px);padding:28px;">
-      <h2 style="font-size:1.75rem;margin:0 0 24px 0;color:#333;">Settings</h2>
+      <h2 style="font-size:1.75rem;margin:0 0 24px 0;">Settings</h2>
 
       <h3 style="font-size:1rem;margin-bottom:24px;">Preference</h3>
       <!-- Dark theme. -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <img src="../assets/icon/dark_mode.svg" style="width:24px;height:24px;">
-          <span style="font-size:1rem;color:#333;">Enable dark theme</span>
+          <img src="../assets/icon/dark_mode.svg" class="invertible-icon" style="width:24px;height:24px;">
+          <span style="font-size:1rem;">Enable dark theme</span>
         </div>
         <label class="switch">
           <input type="checkbox" onchange="document.body.classList.toggle('dark')">
@@ -184,7 +228,7 @@
       <div style="margin-bottom:32px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <img src="../assets/icon/format_size.svg" style="width:24px;height:24px;">
+            <img src="../assets/icon/format_size.svg" class="invertible-icon" style="width:24px;height:24px;">
             <span style="font-size:1rem;">Font size</span>
           </div>
           <span id="font-size-value" style="font-size:1rem;">16px</span>
@@ -200,7 +244,7 @@
       <div style="margin-bottom:32px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <img src="../assets/icon/format_line_spacing.svg" style="width:24px;height:24px;">
+            <img src="../assets/icon/format_line_spacing.svg" class="invertible-icon" style="width:24px;height:24px;">
             <span style="font-size:1rem;">Line spacing</span>
           </div>
           <span id="line-spacing-value" style="font-size:1rem;">1.5</span>
@@ -216,7 +260,7 @@
       <!-- Account. -->
       <h3 style="font-size:1rem;margin-bottom:16px;">Account</h3>
       <div style="display:flex;align-items:flex-start;gap:12px;">
-        <img src="../assets/icon/account.svg" style="width:54px;height:54px;margin-top:4px;">
+        <img src="../assets/icon/account.svg" class="invertible-icon" style="width:54px;height:54px;margin-top:4px;">
         <div style="display:flex;flex-direction:column;gap:8px;">
           <span id="username" style="font-size:1rem;"></span>
           <button id="logout-btn"
@@ -230,7 +274,7 @@
               .then(data => {
                 if (data.success) window.location.href = '../auth/auth.html';
               });"
-            style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;background:#333;color:#fff;text-align:center;">
+            style="padding:8px 16px;border:none;border-radius:8px;cursor:pointer;text-align:center;">
             Logout
           </button>
         </div>
@@ -347,7 +391,7 @@
       }
       
       document.getElementById('submit-book-button').textContent = 'Save';
-      document.getElementById('cancel-edit-book').style.display = 'inline-block';
+      document.getElementById('cancel-edit-book-button').style.display = 'inline-block';
       
       // Scroll to form
       document.getElementById('add-book-form').scrollIntoView({ behavior: 'smooth' });
@@ -358,7 +402,7 @@
       editingBookId = null;
       document.getElementById('add-book-form').reset();
       document.getElementById('submit-book-button').textContent = 'Add Book';
-      document.getElementById('cancel-edit-book').style.display = 'none';
+      document.getElementById('cancel-edit-book-button').style.display = 'none';
     }
 
     // Delete book.
@@ -440,6 +484,68 @@
         loadData();
         resetBookForm();
       });
+    });
+
+    // Settings functionality.
+    function loadSettings() {
+      const darkTheme = localStorage.getItem('darkTheme') === 'true';
+      const fontSize = localStorage.getItem('fontSize') || '16';
+      const lineSpacing = localStorage.getItem('lineSpacing') || '1.5';
+      
+      // Apply settings.
+      document.body.classList.toggle('dark', darkTheme);
+      document.body.style.fontSize = fontSize + 'px';
+      document.body.style.lineHeight = lineSpacing;
+      
+      // Update UI controls.
+      const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
+      const fontSizeSlider = document.querySelector('#settings-dialog input[type="range"][min="12"][max="24"]');
+      const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
+      
+      if (darkToggle) darkToggle.checked = darkTheme;
+      if (fontSizeSlider) {
+        fontSizeSlider.value = fontSize;
+        document.getElementById('font-size-value').textContent = fontSize + 'px';
+      }
+      if (lineSpacingSlider) {
+        lineSpacingSlider.value = lineSpacing;
+        document.getElementById('line-spacing-value').textContent = lineSpacing;
+      }
+    }
+
+    // Event listeners for settings.
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+      
+      // Dark theme toggle.
+      const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
+      if (darkToggle) {
+        darkToggle.addEventListener('change', (e) => {
+          document.body.classList.toggle('dark', e.target.checked);
+          localStorage.setItem('darkTheme', e.target.checked);
+        });
+      }
+
+      // Font size slider.
+      const fontSizeSlider = document.querySelector('#settings-dialog input[type="range"][min="12"][max="24"]');
+      if (fontSizeSlider) {
+        fontSizeSlider.addEventListener('input', (e) => {
+          const size = e.target.value + 'px';
+          document.body.style.fontSize = size;
+          document.getElementById('font-size-value').textContent = size;
+          localStorage.setItem('fontSize', e.target.value);
+        });
+      }
+
+      // Line spacing slider.
+      const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
+      if (lineSpacingSlider) {
+        lineSpacingSlider.addEventListener('input', (e) => {
+          document.body.style.lineHeight = e.target.value;
+          document.getElementById('line-spacing-value').textContent = e.target.value;
+          localStorage.setItem('lineSpacing', e.target.value);
+        });
+      }
     });
 
     // Initial load.
