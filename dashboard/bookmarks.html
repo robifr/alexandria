@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
   <style>
-    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+    body {margin:0;padding:0;font-family:'Roboto Slab',serif;background:#f3ecd3;display:flex;flex-direction:column;min-height:100vh;}
 
     body.dark, body.dark p, body.dark span, body.dark h1, body.dark .nav-item, body.dark .filter-btn, body.dark .card-title, body.dark input[type="text"], body.dark .filter-menu div {color:#e8dfc8;}
     body.dark {background:#2a2618;}
     body.dark .invertible-icon {filter:invert(1) brightness(1.5) sepia(0.3) hue-rotate(5deg);}
 
+    body.dark #header-container {background:#2a2618;}
     body.dark .nav-item:hover, body.dark .nav-item.selected, body.dark .filter-btn.active {border-bottom-color:#d4c7a0;}
     body.dark .filter-menu, body.dark .card:hover, body.dark input[type="text"] {background:#3a3525;}
     body.dark .filter-menu div:hover {background:#4a4535;}
@@ -32,6 +33,7 @@
     body.dark #settings-dialog #logout-btn:hover {background:#dbd7c1}
     body.dark #settings-scroll-area {background:#3a3525}
 
+    #header-container {background:#f3ecd3;}
     .nav-item {cursor:pointer;color:#333;padding:8px 12px;position:relative;}
     .nav-item:hover, .nav-item.selected {border-bottom:2px solid #333;}
     .filter-btn {display:flex;align-items:center;gap:8px;cursor:pointer;color:#333;border:none;border-bottom:2px solid transparent;background:transparent;font-family:'Roboto Slab',serif;font-size:1rem;position:relative;padding:6px 0;}
@@ -73,37 +75,43 @@
 </head>
 <body>
 
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;">
-    <h1 style="margin:0;font-size:1.8rem;">Alexandria</h1>
-    <div style="flex:1;display:flex;justify-content:center;gap:24px;">
-      <div class="nav-item">Books</div>
-      <div class="nav-item selected">Bookmarks</div>
-      <div class="nav-item">History</div>
-      <div class="nav-item admin-only" style="display:none;">Manage Books</div>
-      <div class="nav-item admin-only" style="display:none;">Manage Categories</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:32px;">
-      <div style="position:relative;">
-        <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
-        <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
-        <img src="../assets/icon/mic.svg" class="invertible-icon" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
+  <div id="header-container" style="position:sticky;top:0;z-index:100;flex-shrink:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;">
+      <h1 style="margin:0;font-size:1.8rem;">Alexandria</h1>
+      <div style="flex:1;display:flex;justify-content:center;gap:24px;">
+        <div class="nav-item">Books</div>
+        <div class="nav-item selected">Bookmarks</div>
+        <div class="nav-item">History</div>
+        <div class="nav-item admin-only" style="display:none;">Manage Books</div>
+        <div class="nav-item admin-only" style="display:none;">Manage Categories</div>
       </div>
-      <img id="settings-icon" src="../assets/icon/settings.svg" class="invertible-icon" title="Settings" style="width:36px;height:36px;cursor:pointer;"
-        onclick="document.getElementById('settings-dialog').showModal();">
+      <div style="display:flex;align-items:center;gap:32px;">
+        <div style="position:relative;">
+          <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
+          <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
+          <img src="../assets/icon/mic.svg" class="invertible-icon" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
+        </div>
+        <img id="settings-icon" src="../assets/icon/settings.svg" class="invertible-icon" title="Settings" style="width:36px;height:36px;cursor:pointer;"
+          onclick="document.getElementById('settings-dialog').showModal();">
+      </div>
     </div>
-  </div>
 
-  <div style="display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid #ddd;position:relative;">
-    <div style="position:relative;">
-      <button class="filter-btn">
-        Category
-        <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" class="invertible-icon" style="width:20px;height:20px;">
-      </button>
-      <div id="menu-category" class="filter-menu"></div>
+    <div style="display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid #ddd;position:relative;">
+      <div style="position:relative;">
+        <button class="filter-btn">
+          Category
+          <img id="icon-category" src="../assets/icon/arrow_drop_down.svg" class="invertible-icon" style="width:20px;height:20px;">
+        </button>
+        <div id="menu-category" class="filter-menu"></div>
+      </div>
     </div>
   </div>
 
   <div id="book-list" style="flex:1;display:flex;flex-wrap:wrap;gap:20px;padding:20px;overflow:auto;"></div>
+
+  <footer style="width:100%;text-align:center;padding:16px 0;background:transparent;font-size:0.8rem;">
+    By: <strong>Robi Farhan Anshori</strong>, <strong>Abdul Ridho Ramadhan</strong>, <strong>Julia Postelia Wea Buro</strong>
+  </footer>
 
   <dialog id="settings-dialog" style="position:relative;width:460px;max-width:90vw;padding:0;border:none;border-radius:12px;background:#f3ecd3;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:'Roboto Slab',serif;overflow:hidden;max-height:80vh;">
     <button title="Close" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;outline:none;"
