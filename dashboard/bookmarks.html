@@ -352,13 +352,14 @@
       
       // Apply settings.
       document.body.classList.toggle('dark', darkTheme);
-      document.body.style.fontSize = fontSize + 'px';
-      document.body.style.lineHeight = lineSpacing;
+      document.documentElement.style.fontSize = fontSize + 'px';
+      document.documentElement.style.lineHeight = lineSpacing;
       
       // Update UI controls.
       const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
       const fontSizeSlider = document.querySelector('#settings-dialog input[type="range"][min="12"][max="24"]');
       const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
+      
       
       if (darkToggle) darkToggle.checked = darkTheme;
       if (fontSizeSlider) {
@@ -389,7 +390,7 @@
       if (fontSizeSlider) {
         fontSizeSlider.addEventListener('input', (e) => {
           const size = e.target.value + 'px';
-          document.body.style.fontSize = size;
+          document.documentElement.style.fontSize = size;
           document.getElementById('font-size-value').textContent = size;
           localStorage.setItem('fontSize', e.target.value);
         });
@@ -399,7 +400,7 @@
       const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
       if (lineSpacingSlider) {
         lineSpacingSlider.addEventListener('input', (e) => {
-          document.body.style.lineHeight = e.target.value;
+          document.documentElement.style.lineHeight = e.target.value;
           document.getElementById('line-spacing-value').textContent = e.target.value;
           localStorage.setItem('lineSpacing', e.target.value);
         });
