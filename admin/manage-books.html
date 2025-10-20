@@ -210,7 +210,7 @@
     </div>
   </div>
 
-  <dialog id="settings-dialog" style="position:relative;width:460px;max-width:90vw;padding:0;border:none;border-radius:12px;background:#f3ecd3;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:'Roboto Slab',serif;overflow:hidden;max-height:80vh;">
+  <dialog id="settings-dialog" style="position:absolute;width:460px;max-width:90vw;padding:0;border:none;border-radius:12px;background:#f3ecd3;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:'Roboto Slab',serif;overflow:hidden;max-height:80vh;">
     <button title="Close" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0;outline:none;"
       onclick="document.getElementById('settings-dialog').close()">
       ×
@@ -506,8 +506,8 @@
       
       // Apply settings.
       document.body.classList.toggle('dark', darkTheme);
-      document.body.style.fontSize = fontSize + 'px';
-      document.body.style.lineHeight = lineSpacing;
+      document.documentElement.style.fontSize = fontSize + 'px';
+      document.documentElement.style.lineHeight = lineSpacing;
       
       // Update UI controls.
       const darkToggle = document.querySelector('#settings-dialog input[type="checkbox"]');
@@ -543,7 +543,7 @@
       if (fontSizeSlider) {
         fontSizeSlider.addEventListener('input', (e) => {
           const size = e.target.value + 'px';
-          document.body.style.fontSize = size;
+          document.documentElement.style.fontSize = size;
           document.getElementById('font-size-value').textContent = size;
           localStorage.setItem('fontSize', e.target.value);
         });
@@ -553,7 +553,7 @@
       const lineSpacingSlider = document.querySelector('#settings-dialog input[type="range"][min="1"][max="2"]');
       if (lineSpacingSlider) {
         lineSpacingSlider.addEventListener('input', (e) => {
-          document.body.style.lineHeight = e.target.value;
+          document.documentElement.style.lineHeight = e.target.value;
           document.getElementById('line-spacing-value').textContent = e.target.value;
           localStorage.setItem('lineSpacing', e.target.value);
         });

@@ -107,12 +107,16 @@
       await view.open(epubPath);
 
       // Apply visual inversion to foliate reader (text iframe-safe).
-      const foliateView = document.querySelector('foliate-view');
-      if (foliateView) {
-        const isDark = localStorage.getItem('darkTheme') === 'true';
-        foliateView.style.transition = 'filter 0.3s ease';
-        foliateView.style.filter = isDark ? 'invert(1) hue-rotate(180deg) contrast(0.95) saturate(0.95)' : '';
-      }
+      const isDark = localStorage.getItem('darkTheme') === 'true';
+      view.style.transition = 'filter 0.3s ease';
+      view.style.filter = isDark ? 'invert(1) hue-rotate(180deg) contrast(0.95) saturate(0.95)' : '';
+
+      // TODO: Both font size and line spacing don't have any effect on Foliate's view.
+      //    I assume it might be the limitaton of ePUB itself.
+      const fontSize = localStorage.getItem('fontSize') || '16';
+      const lineSpacing = localStorage.getItem('lineSpacing') || '1.5';
+      view.style.fontSize = fontSize + 'px';
+      view.style.lineSpacing = lineSpacing;
 
       // Set book metadata in TOC panel.
       document.getElementById('book-title').textContent = book.title ?? '';
@@ -237,8 +241,8 @@
       
       // Apply settings.
       document.body.classList.toggle('dark', darkTheme);
-      document.body.style.fontSize = fontSize + 'px';
-      document.body.style.lineHeight = lineSpacing;
+      document.documentElement.style.fontSize = fontSize + 'px';
+      document.documentElement.style.lineHeight = lineSpacing;
     }
 
     loadSettings();
