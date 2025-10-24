@@ -103,7 +103,8 @@
       <div style="display:flex;align-items:center;gap:32px;">
         <div style="position:relative;">
           <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
-          <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;" oninput="searchBooks()">
+          <input type="text" placeholder="Search books…" style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;"
+            onkeydown="handleGlobalSearch(event)">
           <img src="../assets/icon/mic.svg" title="Voice-to-Text" class="invertible-icon" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
         </div>
         <img id="settings-icon" src="../assets/icon/settings.svg" title="Settings" class="invertible-icon" style="width:36px;height:36px;cursor:pointer;"
@@ -314,6 +315,14 @@
       if (e.target === document.getElementById('settings-dialog')) {
         document.getElementById('settings-dialog').close();
       };
+    }
+
+    // Search form to `books.html`.
+    function handleGlobalSearch(event) {
+      if (event.key === 'Enter') {
+        const keyword = event.target.value.trim();
+        if (keyword) window.location.href = `../dashboard/books.html?search=${encodeURIComponent(keyword)}`;
+      }
     }
 
     let allBooks = [];

@@ -106,7 +106,7 @@
           <img src="../assets/icon/search.svg" class="invertible-icon" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;">
           <input id="global-search-input" type="text" placeholder="Search books…"
             style="border:1px solid #ccc;border-radius:20px;background:transparent;outline:none;padding:10px 12px 10px 40px;font-size:1rem;min-width:220px;height:16px;"
-            oninput="searchBooks()" onkeydown="handleGlobalSearch(event)">
+            onkeydown="handleGlobalSearch(event)">
           <img src="../assets/icon/mic.svg" class="invertible-icon" title="Voice-to-Text" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;cursor:pointer;">
         </div>
         <img id="settings-icon" src="../assets/icon/settings.svg" class="invertible-icon" title="Settings" style="width:36px;height:36px;cursor:pointer;"
@@ -252,6 +252,14 @@
       if (e.target === document.getElementById('settings-dialog')) {
         document.getElementById('settings-dialog').close();
       };
+    }
+
+    // Search form to `books.html`.
+    function handleGlobalSearch(event) {
+      if (event.key === 'Enter') {
+        const keyword = event.target.value.trim();
+        if (keyword) window.location.href = `books.html?search=${encodeURIComponent(keyword)}`;
+      }
     }
 
     let fullHistory = {};
@@ -441,15 +449,6 @@
     });
 
     loadHistory();
-    // search form to books.html
-    function handleGlobalSearch(event) {
-      if (event.key === 'Enter') {
-        const keyword = event.target.value.trim();
-        if (keyword) {
-          window.location.href = `books.html?search=${encodeURIComponent(keyword)}`;
-        }
-      }
-    }
   </script>
 </body>
 </html>
